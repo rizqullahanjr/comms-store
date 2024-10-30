@@ -23,6 +23,27 @@
     padding: 20px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
+    &__divider{
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    &__other{
+      width: 100%;
+      &__button {
+        background-color: #000;
+        color: #fff;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        gap: 5px;
+        i {
+          font-size: 24px;
+        }
+    }
+    }
     &__item {
       display: flex;
       flex-direction: column;
@@ -36,10 +57,11 @@
       }
     }
     &__button {
+      margin-top: 20px;
       background-color: #000;
       color: #fff;
       width: 100%;
-      padding: 10px;
+      padding: 15px;
       border: none;
     }
   }

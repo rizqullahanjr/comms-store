@@ -6,25 +6,29 @@ type Proptypes = {
 }
 
 const listSidebarItem = [
-    {
-        title: "Dashboard",
-        url: '/admin',
-        icon: 'bxs-dashboard'
-    },
-    {
-        title: "Products",
-        url: '/admin/products',
-        icon: 'bxs-package'
-    },
-
-]
+  {
+    title: "Dashboard",
+    url: "/admin",
+    icon: "bxs-dashboard",
+  },
+  {
+    title: "Products",
+    url: "/admin/products",
+    icon: "bxs-package",
+  },
+  {
+    title: "Users",
+    url: "/admin/users",
+    icon: "bxs-group",
+  }
+];
 
 const AdminLayout = (props: Proptypes) => {
     const {children} = props;
     return (
         <div className={styles.admin}>
             <Sidebar lists={listSidebarItem}/>
-            {children}
+            <div className={styles.admin__main}>{children}</div>
         </div>
     );
 };

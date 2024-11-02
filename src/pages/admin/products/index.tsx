@@ -4,7 +4,7 @@ const AdminProductPage = () => {
   return (
     <AdminLayout>
       <div>
-        <h1>Admin</h1>
+        <h1>Products</h1>
       </div>
     </AdminLayout>
   );

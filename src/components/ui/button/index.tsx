@@ -8,7 +8,7 @@ type PropTypes = {
     className?: string;
 };
 
-const button = (props: PropTypes) => {
+const Button = (props: PropTypes) => {
     const { type, onClick, children, variant = 'primary', className } = props;
     return (
       <button
@@ -21,4 +21,4 @@ const button = (props: PropTypes) => {
     );
 }
 
-export default button;
+export default Button;

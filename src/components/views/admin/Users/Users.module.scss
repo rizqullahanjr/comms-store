@@ -17,9 +17,24 @@
         tr:nth-child(even){
             background-color: #f2f2f2;
         }
-
         &__actions{
             display: flex;
-            gap: 5px;}
+            gap: 10px;
+            i {
+                font-size: 15px;
+            }
+            &__delete{
+                cursor: pointer;
+                background-color: red;
+                color: black;
+                padding: 15px;
+            }
+            &__edit{
+                cursor: pointer;
+                background-color: aqua;
+                color: black;
+                padding: 15px;
+            }
     }
+}
 }

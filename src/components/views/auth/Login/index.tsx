@@ -5,8 +5,8 @@ import styles from "./Login.module.scss";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import Input from "@/components/ui/input";
-import Button from "@/components/ui/button";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 import AuthLayout from "@/components/layouts/AuthLayout";
 
 const LoginView = () => {
@@ -43,29 +43,33 @@ const LoginView = () => {
   };
 
   return (
-    <AuthLayout title="Login" link="/auth/register" linkText="Don't have an account? Sign up">
+    <AuthLayout
+      title="Login"
+      link="/auth/register"
+      linkText="Don't have an account? Sign up"
+    >
       <form onSubmit={handleSubmit}>
-          <Input label="Email" name="email" type="email" />
-          <Input label="Password" name="password" type="password" />
-          <Button
-            type="submit"
-            variant="primary"
-            className={styles.login__button}
-          >
-            {isLoading ? "Loading..." : "Login"}
-          </Button>
-        </form>
-        <hr className={styles.login__divider} />
-        <div className={styles.login__other}>
-          <Button
-            type="button"
-            className={styles.login__other__button}
-            onClick={() => signIn("google", { callbackUrl, redirect: false })}
-          >
-            <i className="bx bxl-google" />
-            Login with Google
-          </Button>
-        </div>
+        <Input label="Email" name="email" type="email" />
+        <Input label="Password" name="password" type="password" />
+        <Button
+          type="submit"
+          variant="primary"
+          className={styles.login__button}
+        >
+          {isLoading ? "Loading..." : "Login"}
+        </Button>
+      </form>
+      <hr className={styles.login__divider} />
+      <div className={styles.login__other}>
+        <Button
+          type="button"
+          className={styles.login__other__button}
+          onClick={() => signIn("google", { callbackUrl, redirect: false })}
+        >
+          <i className="bx bxl-google" />
+          Login with Google
+        </Button>
+      </div>
     </AuthLayout>
   );
 };

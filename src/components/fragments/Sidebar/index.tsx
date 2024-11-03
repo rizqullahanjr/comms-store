@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import styles from "./Sidebar.module.scss";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import Button from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
 type PropTypes = {

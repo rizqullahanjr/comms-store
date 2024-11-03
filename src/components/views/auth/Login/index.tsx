@@ -5,8 +5,8 @@ import styles from "./Login.module.scss";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import Input from "@/components/ui/input";
+import Button from "@/components/ui/button";
 import AuthLayout from "@/components/layouts/AuthLayout";
 
 const LoginView = () => {

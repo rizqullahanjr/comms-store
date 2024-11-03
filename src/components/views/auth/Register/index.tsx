@@ -1,8 +1,8 @@
-import Input from "@/components/ui/input";
+import Input from "@/components/ui/Input";
 import styles from "./Register.module.scss";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 import authServices from "@/services/auth";
 import AuthLayout from "@/components/layouts/AuthLayout";
 

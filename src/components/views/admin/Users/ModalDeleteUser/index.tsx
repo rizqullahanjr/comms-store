@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import userServices from "@/services/user";
 import styles from "./ModalDeleteUser.module.scss";

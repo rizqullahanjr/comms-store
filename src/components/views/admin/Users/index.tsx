@@ -3,7 +3,7 @@ import AdminLayout from "@/components/layouts/AdminLayout";
 import styles from "./Users.module.scss";
 import { useEffect, useState } from "react";
 import ModalUpdateUser from "./ModalUpdateUser";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 import ModalDeleteUser from "./ModalDeleteUser";
 
 type PropTypes = {

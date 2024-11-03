@@ -1,0 +1,40 @@
+.users{
+    &__table{
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+        margin-top: 2rem;
+        // border: 1px solid #ddd;
+        th, td{
+            text-align: left;
+            padding: 8px
+        }
+        thead{
+            tr{
+               background-color: #b1afaf; 
+            }
+        }
+        tr:nth-child(even){
+            background-color: #f2f2f2;
+        }
+        &__actions{
+            display: flex;
+            gap: 10px;
+            i {
+                font-size: 15px;
+            }
+            &__delete{
+                cursor: pointer;
+                background-color: red;
+                color: black;
+                padding: 15px;
+            }
+            &__edit{
+                cursor: pointer;
+                background-color: aqua;
+                color: black;
+                padding: 15px;
+            }
+    }
+}
+}

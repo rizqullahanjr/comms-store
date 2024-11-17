@@ -1,4 +1,4 @@
-.sidebar{
+.sidebar {
     background-color: black;
     color: white;
     padding: 20px;
@@ -7,35 +7,35 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    &__top{
+    &__top {
         &__title {
             margin-bottom: 40px;
             font-size: 24px;
             text-align: center;
         }
-        &__lists{
+        &__lists {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            &__item{
+            &__item {
                 background-color: gray;
-                // border-radius: 5px;
+                border-radius: 10px;
                 font-size: 18px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 transition: 0.3s;
                 padding: 5px 10px;
-                &__icon{
+                &__icon {
                     font-size: 32px;
                     gap: 30px;
                 }
-                &:hover{
+                &:hover {
                     background-color: white;
                     color: #000;
                     transition: 0.3s;
                 }
-                &__active{
+                &__active {
                     background-color: white;
                     color: #000;
                     transition: 0.3s;
@@ -43,8 +43,8 @@
             }
         }
     }
-    &__bottom{
-        &__button{
+    &__bottom {
+        &__button {
             width: 100%;
         }
     }

@@ -4,15 +4,13 @@ import userServices from '@/services/user'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
-const ProfileMemberPage = () => {
+const ProfileMemberPage = ({ setToaster }: any) => {
     const [profile, setProfile] = useState({})
     const session: any = useSession()
     useEffect(() => {
         if (session.data?.accessToken && Object.keys(profile).length === 0) {
             const getProfile = async () => {
-                const { data } = await userServices.getProfile(
-                    session.data?.accessToken,
-                )
+                const { data } = await userServices.getProfile(session.data?.accessToken)
                 setProfile(data.data)
             }
             getProfile()
@@ -21,7 +19,12 @@ const ProfileMemberPage = () => {
 
     return (
         <>
-            <ProfileMemberView profile={profile} setProfile={setProfile} session={session} />
+            <ProfileMemberView
+                profile={profile}
+                setProfile={setProfile}
+                session={session}
+                setToaster={setToaster}
+            />
         </>
     )
 }

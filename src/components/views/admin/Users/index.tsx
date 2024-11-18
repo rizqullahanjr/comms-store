@@ -8,13 +8,14 @@ import ModalDeleteUser from './ModalDeleteUser'
 
 type PropTypes = {
     users: any
+    setToaster: any
 }
 
 const UsersAdminView = (props: PropTypes) => {
     const [updatedUser, setUpdatedUser] = useState({})
     const [usersData, setUsersData] = useState([])
     const [deletedUser, setDeletedUser] = useState({})
-    const { users } = props
+    const { users, setToaster } = props
 
     useEffect(() => {
         setUsersData(users)
@@ -42,16 +43,10 @@ const UsersAdminView = (props: PropTypes) => {
                                     <td>{user.email}</td>
                                     <td>{user.role}</td>
                                     <td>
-                                        <div
-                                            className={
-                                                styles.users__table__actions
-                                            }
-                                        >
+                                        <div className={styles.users__table__actions}>
                                             <Button
                                                 type='button'
-                                                onClick={() =>
-                                                    setUpdatedUser(user)
-                                                }
+                                                onClick={() => setUpdatedUser(user)}
                                                 className={
                                                     styles.users__table__actions__edit
                                                 }
@@ -63,9 +58,7 @@ const UsersAdminView = (props: PropTypes) => {
                                                 className={
                                                     styles.users__table__actions__delete
                                                 }
-                                                onClick={() =>
-                                                    setDeletedUser(user)
-                                                }
+                                                onClick={() => setDeletedUser(user)}
                                             >
                                                 <i className='bx bx-trash' />
                                             </Button>
@@ -82,6 +75,7 @@ const UsersAdminView = (props: PropTypes) => {
                     updatedUser={updatedUser}
                     setUpdatedUser={setUpdatedUser}
                     setUsersData={setUsersData}
+                    setToaster={setToaster}
                 />
             )}
             {Object.keys(deletedUser).length && (
@@ -89,6 +83,7 @@ const UsersAdminView = (props: PropTypes) => {
                     deletedUser={deletedUser}
                     setDeletedUser={setDeletedUser}
                     setUsersData={setUsersData}
+                    setToaster={setToaster}
                 />
             )}
         </>

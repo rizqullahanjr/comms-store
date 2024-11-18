@@ -27,10 +27,7 @@ const authOptions: NextAuthOptions = {
                 }
                 const user: any = await signIn(email)
                 if (user) {
-                    const passwordConfirm = await compare(
-                        password,
-                        user.password,
-                    )
+                    const passwordConfirm = await compare(password, user.password)
                     if (passwordConfirm) {
                         return user
                     }
@@ -96,13 +93,9 @@ const authOptions: NextAuthOptions = {
                 session.user.id = token.id
             }
 
-            const accessToken = jwt.sign(
-                token,
-                process.env.NEXTAUTH_SECRET || '',
-                {
-                    algorithm: 'HS256',
-                },
-            )
+            const accessToken = jwt.sign(token, process.env.NEXTAUTH_SECRET || '', {
+                algorithm: 'HS256',
+            })
 
             session.accessToken = accessToken
 

@@ -6,10 +6,14 @@ import styles from './ModalDeleteUser.module.scss'
 import { useSession } from 'next-auth/react'
 
 const ModalDeleteUser = (props: any) => {
-    const { deletedUser, setDeletedUser, setUsersData } = props
+    const { deletedUser, setDeletedUser, setUsersData, setToaster } = props
     const session: any = useSession()
     const handleDelete = async () => {
         userServices.deleteUser(deletedUser.id, session.data?.accessToken)
+        setToaster({
+            variant: 'success',
+            message: 'User Deleted Successfully',
+        })
         setDeletedUser({})
         const { data } = await userServices.getAllUsers()
         setUsersData(data.data)

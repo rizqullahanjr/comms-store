@@ -46,7 +46,7 @@ export default function Home() {
                             Get started by editing{' '}
                             <code>src/pages/index.tsx</code>.
                         </li>
-                        <li>Penis</li>
+                        <li>Benis</li>
                     </ol>
 
                     <div className={styles.ctas}>

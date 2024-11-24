@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AdminLayout from '@/components/layouts/AdminLayout'
 import styles from './Users.module.scss'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import ModalUpdateUser from './ModalUpdateUser'
 import Button from '@/components/ui/Button'
 import ModalDeleteUser from './ModalDeleteUser'
+import { User } from '@/types/user.type'
+import { useSession } from 'next-auth/react'
 
 type PropTypes = {
-    users: any
-    setToaster: any
+    users: User[]
+    setToaster: Dispatch<SetStateAction<{}>>
 }
 
 const UsersAdminView = (props: PropTypes) => {
-    const [updatedUser, setUpdatedUser] = useState({})
-    const [usersData, setUsersData] = useState([])
-    const [deletedUser, setDeletedUser] = useState({})
+    const [updatedUser, setUpdatedUser] = useState<User | {}>({})
+    const session: any = useSession()
+    const [usersData, setUsersData] = useState<User[]>([])
+    const [deletedUser, setDeletedUser] = useState<User | {}>({})
     const { users, setToaster } = props
 
     useEffect(() => {
@@ -36,7 +40,7 @@ const UsersAdminView = (props: PropTypes) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {usersData.map((user: any, index: number) => (
+                            {usersData.map((user: User, index: number) => (
                                 <tr key={user.id}>
                                     <td>{index + 1}</td>
                                     <td>{user.fullname}</td>
@@ -76,6 +80,7 @@ const UsersAdminView = (props: PropTypes) => {
                     setUpdatedUser={setUpdatedUser}
                     setUsersData={setUsersData}
                     setToaster={setToaster}
+                    session={session}
                 />
             )}
             {Object.keys(deletedUser).length && (
@@ -84,6 +89,7 @@ const UsersAdminView = (props: PropTypes) => {
                     setDeletedUser={setDeletedUser}
                     setUsersData={setUsersData}
                     setToaster={setToaster}
+                    session={session}
                 />
             )}
         </>

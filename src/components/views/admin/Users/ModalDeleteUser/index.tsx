@@ -1,22 +1,44 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import userServices from '@/services/user'
 import styles from './ModalDeleteUser.module.scss'
-import { useSession } from 'next-auth/react'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { User } from '@/types/user.type'
 
-const ModalDeleteUser = (props: any) => {
-    const { deletedUser, setDeletedUser, setUsersData, setToaster } = props
-    const session: any = useSession()
+type PropTypes = {
+    setUsersData: Dispatch<SetStateAction<User[]>>
+    deletedUser: User | any
+    setToaster: Dispatch<SetStateAction<{}>>
+    setDeletedUser: Dispatch<SetStateAction<{}>>
+    session: any
+}
+
+const ModalDeleteUser = (props: PropTypes) => {
+    const { deletedUser, setDeletedUser, setUsersData, setToaster, session } = props
+    const [isLoading, setIsLoading] = useState(false)
     const handleDelete = async () => {
-        userServices.deleteUser(deletedUser.id, session.data?.accessToken)
-        setToaster({
-            variant: 'success',
-            message: 'User Deleted Successfully',
-        })
-        setDeletedUser({})
-        const { data } = await userServices.getAllUsers()
-        setUsersData(data.data)
+        const result = await userServices.deleteUser(
+            deletedUser.id, 
+            session.data?.accessToken)
+            if (result.status === 200) {
+                setIsLoading(false)
+                setToaster({
+                    variant: 'success',
+                    message: 'User Deleted Successfully',
+                })
+                setDeletedUser({})
+                const { data } = await userServices.getAllUsers()
+                setUsersData(data.data)
+            } else {
+                setIsLoading(false)
+                setToaster({
+                    variant: 'danger',
+                    message: 'User Failed to Deleted',
+                })
+            }
+        
     }
     return (
         <Modal onClose={() => setDeletedUser({})}>
@@ -27,7 +49,7 @@ const ModalDeleteUser = (props: any) => {
                     handleDelete()
                 }}
             >
-                Delete
+                {isLoading ? 'Deleting...' : 'Yes, Delete'}
             </Button>
         </Modal>
     )

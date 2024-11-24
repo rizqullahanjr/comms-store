@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import MemberLayout from '@/components/layouts/MemberLayout'
 import styles from './Profile.module.scss'
@@ -5,13 +7,21 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Image from 'next/image'
 import { uploadFile } from '@/lib/firebase/service'
-import { useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import userServices from '@/services/user'
+import { User } from '@/types/user.type'
 
-const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) => {
-    const [changeImage, setChangeImage] = useState<any>({})
+type PropTypes = {
+    profile: User | any
+    setToaster: Dispatch<SetStateAction<{}>>
+    setProfile: Dispatch<SetStateAction<{}>>
+    session: any
+}
+
+const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTypes) => {
+    const [changeImage, setChangeImage] = useState<File | any>({})
     const [isLoading, setIsLoading] = useState('')
-    const handleChangeProfile = async (e: any) => {
+    const handleChangeProfile = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('profile')
         const form = e.target as HTMLFormElement
@@ -20,7 +30,6 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
             phone: form.phone.value,
         }
         const result = await userServices.updateProfile(
-            profile.id,
             data,
             session.data?.accessToken,
         )
@@ -40,10 +49,11 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
             setIsLoading('')
         }
     }
-    const handleChangeProfilePicture = (e: any) => {
+    const handleChangeProfilePicture = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('picture')
-        const file = e.target[0]?.files[0]
+        const form = e.target as HTMLFormElement
+        const file = form.image.files[0]
         if (file) {
             uploadFile(profile.id, file, async (status: any, newImageURL: string) => {
                 if (status) {
@@ -51,7 +61,6 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
                         image: newImageURL,
                     }
                     const result = await userServices.updateProfile(
-                        profile.id,
                         data,
                         session.data?.accessToken,
                     )
@@ -62,7 +71,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
                             image: newImageURL,
                         })
                         setChangeImage({})
-                        e.target[0].value = ''
+                        form.reset()
                         setToaster({
                             variant: 'success',
                             message: 'Profile Image Updated',
@@ -81,7 +90,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
             })
         }
     }
-    const handleChangePassword = async (e: any) => {
+    const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('password')
         const form = e.target as HTMLFormElement
@@ -90,25 +99,26 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
             oldPassword: form['old-password'].value,
             encryptedPassword: profile.password,
         }
-        const result = await userServices.updateProfile(
-            profile.id,
-            data,
-            session.data?.accessToken,
-        )
-        if (result.status === 200) {
+        try {
+            const result = await userServices.updateProfile(
+                data,
+                session.data?.accessToken,
+            )
+            if (result.status === 200) {
+                setIsLoading('')
+                form.reset()
+                setProfile({ ...profile, password: data.password })
+                setToaster({
+                    variant: 'success',
+                    message: 'Profile Updated',
+                })
+            }
+        } catch (error) {
             setIsLoading('')
-            form.reset()
-            setProfile({ ...profile, password: data.password })
-            setToaster({
-                variant: 'success',
-                message: 'Profile Updated',
-            })
-        } else {
-            setIsLoading('')
-            setToaster({
-                variant: 'danger',
-                message: 'Old Password Incorrect',
-            })
+                setToaster({
+                    variant: 'danger',
+                    message: 'Old Password Incorrect',
+                })
         }
     }
 
@@ -229,16 +239,19 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: any) =>
                                 name='old-password'
                                 type='password'
                                 label='Old Password'
+                                disabled={profile.type === 'google'}
                             />
                             <Input
                                 name='new-password'
                                 type='password'
                                 label='New Password'
+                                disabled={profile.type === 'google'}
                             />
                             <Button
                                 className={styles.profile__main__row__password__button}
                                 type='submit'
                                 variant='primary'
+                                disabled= {isLoading === 'password' || profile.type === 'google'}
                             >
                                 {isLoading === 'password'
                                     ? 'Updating...'

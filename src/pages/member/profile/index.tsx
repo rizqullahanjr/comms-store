@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ProfileMemberView from '@/components/views/member/Profile'
 import userServices from '@/services/user'
+import { User } from '@/types/user.type'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
-const ProfileMemberPage = ({ setToaster }: any) => {
-    const [profile, setProfile] = useState({})
+type PropTypes = {
+    setToaster: Dispatch<SetStateAction<{}>>
+}
+const ProfileMemberPage = ({ setToaster }: PropTypes) => {
+    const [profile, setProfile] = useState<User | {}>({})
     const session: any = useSession()
     useEffect(() => {
         if (session.data?.accessToken && Object.keys(profile).length === 0) {

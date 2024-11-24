@@ -42,7 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             )
         }
     } else if (req.method === 'PUT') {
-        const { user }: any = req.query
         const { data } = req.body
         const token = req.headers.authorization?.split(' ')[1] || ''
         jwt.verify(
@@ -66,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         delete data.encryptedPassword
                         data.password = await hash(data.password, 10)
                     }
-                    await updateData('users', user[0], data, (result: boolean) => {
+                    await updateData('users', decoded.id, data, (result: boolean) => {
                         if (result) {
                             res.status(200).json({
                                 status: true,

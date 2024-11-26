@@ -1,13 +1,21 @@
-import AdminLayout from '@/components/layouts/AdminLayout'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-const AdminProductPage = () => {
-    return (
-        <AdminLayout>
-            <div>
-                <h1>Products</h1>
-            </div>
-        </AdminLayout>
-    )
+import ProductsAdminView from '@/components/views/admin/Products'
+import productServices from '@/services/product'
+import { useEffect, useState } from 'react'
+
+const AdminProductsPage = ({ setToaster }: any) => {
+    const [products, setProducts] = useState([])
+    const getAllProducts = async () => {
+        const { data } = await productServices.getAllProducts()
+        setProducts(data.data)
+    }
+    useEffect(() => {
+        
+        getAllProducts()
+    }, [])
+
+    return <ProductsAdminView products={products} setToaster={setToaster} />
 }
 
-export default AdminProductPage
+export default AdminProductsPage

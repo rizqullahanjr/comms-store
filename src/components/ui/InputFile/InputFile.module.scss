@@ -1,0 +1,20 @@
+.file {
+    &__label {
+        margin-top: 10px;
+        background-color: #eee;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    &__input {
+        opacity: 0;
+        position: absolute;
+        z-index: -1;
+    }
+}

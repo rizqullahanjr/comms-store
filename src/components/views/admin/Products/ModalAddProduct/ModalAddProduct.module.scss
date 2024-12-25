@@ -5,7 +5,14 @@
         width: 100%;
         gap: 20px;
         &__item {
+            margin-top: 10px;
             width: 50%;
+            :nth-child(1){
+                margin-bottom: 10px;
+            }
+            label {
+                font-size: 14px;
+            }
         }
         &__button {
             padding: 5px 10px;

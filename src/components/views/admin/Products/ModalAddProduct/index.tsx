@@ -5,10 +5,13 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import Select from '@/components/ui/Select'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import styles from './ModalAddProduct.module.scss'
 import { Product } from '@/types/product.type'
 import InputFile from '@/components/ui/InputFile'
+import productServices from '@/services/product'
+import { useSession } from 'next-auth/react'
+import { uploadFile } from '@/lib/firebase/service'
 
 type Proptypes = {
     setModalAddProducts: Dispatch<SetStateAction<boolean>>
@@ -17,28 +20,103 @@ type Proptypes = {
 }
 
 const ModalAddProduct = (props: Proptypes) => {
-    const {setModalAddProducts, setToaster, setProductsData} = props
+    const { setModalAddProducts, setToaster, setProductsData } = props
     const [isLoading, setIsLoading] = useState(false)
     const [stockCount, setStockCount] = useState([{ type: '', qty: 0 }])
     const [uploadedImage, setUploadedImage] = useState<File | null>(null)
-
+    const session: any = useSession()
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
         newStockCount[i][type] = e.target.value
         setStockCount(newStockCount)
     }
+    const uploadImage = (id: string, form: any) => {
+        const file = form.image.files[0]
+        const newName = 'main.' + file.name.split('.')[1]
+        if (file) {
+            uploadFile(
+                id,
+                file,
+                newName,
+                'products',
+                async (status: boolean, newImageURL: string) => {
+                    if (status) {
+                        const data = {
+                            image: newImageURL,
+                        }
+                        const result = await productServices.updateProduct(
+                            id,
+                            data,
+                            session.data?.accessToken,
+                        )
+                        if(result.status === 200){
+                            setIsLoading(false)
+                            setUploadedImage(null)
+                            form.reset()
+                            setModalAddProducts(false)
+                            const {data} = await productServices.getAllProducts()
+                            setProductsData(data.data)
+                            setToaster({
+                                variant: 'success',
+                                message: 'Successfully Adding New Product'
+                            })
+                        } else {
+                            setIsLoading(false)
+                            setToaster({
+                                variant: 'success',
+                                message: 'Failed to Add'
+                            })
+                        }
+                    } else {
+                        setIsLoading(false)
+                        setToaster({
+                            variant: 'danger',
+                            message: 'Unknown Error Occured'
+                        })
+                    }
+                },
+            )
+        }
+    }
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        setIsLoading(true)
+        const form: any = event.target as HTMLFormElement
+        const data = {
+            name: form.name.value,
+            price: form.price.value,
+            category: form.category.value,
+            availability: form.Availability.value,
+            stock: stockCount,
+            image: '',
+        }
+
+        const result = await productServices.addProduct(
+            data,
+            session.data?.accessToken,
+        )
+
+        if (result.status === 200) {
+            uploadImage(result.data.data.id, form)
+        }
+    }
+
     return (
         <Modal onClose={() => setModalAddProducts(false)}>
-            <h1>Update User</h1>
-            <form className={styles.form} onSubmit={() => {}}>
+            <h1>Add Product</h1>
+            <form className={styles.form} onSubmit={handleSubmit}>
                 <Input
                     label='Name'
                     name='name'
                     type='text'
                     placeholder='Insert Product Name'
                 />
-                <Input label='Price' name='price' type='number' />
-                <Input label='Phone' name='phone' type='number' />
+                <Input
+                    label='Price'
+                    name='price'
+                    type='number'
+                    placeholder='Product Price'
+                />
                 <Select
                     label='Category'
                     name='category'
@@ -58,41 +136,52 @@ const ModalAddProduct = (props: Proptypes) => {
                     ]}
                 />
                 <label htmlFor='stock'>Stock</label>
-                {stockCount.map((item: { type: string; qty: number }, i: number) => (
-                    <div className={styles.form__stock} key={i}>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='Type'
-                                name='type'
-                                type='text'
-                                placeholder='Insert Stock Type'
-                                onChange={e => {
-                                    handleStock(e, i, 'type')
-                                }}
-                            />
+                {stockCount.map(
+                    (item: { type: string; qty: number }, i: number) => (
+                        <div className={styles.form__stock} key={i}>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='Type'
+                                    name='type'
+                                    type='text'
+                                    placeholder='Insert Stock Type'
+                                    onChange={e => {
+                                        handleStock(e, i, 'type')
+                                    }}
+                                />
+                            </div>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='QTY'
+                                    name='qty'
+                                    type='number'
+                                    placeholder='Insert Stock QTY'
+                                    onChange={e => {
+                                        handleStock(e, i, 'qty')
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='QTY'
-                                name='qty'
-                                type='number'
-                                placeholder='Insert Stock QTY'
-                                onChange={e => {
-                                    handleStock(e, i, 'qty')
-                                }}
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ),
+                )}
                 <Button
                     type='button'
                     className={styles.form__stock_button}
-                    onClick={() => setStockCount([...stockCount, { type: '', qty: 0 }])}
+                    onClick={() =>
+                        setStockCount([
+                            ...stockCount,
+                            { type: '', qty: 0 },
+                        ])
+                    }
                 >
                     Add New Stock
                 </Button>
                 <label htmlFor='image'>Image</label>
-                <InputFile name='image' uploadedImage={uploadedImage} setUploadedImage={setUploadedImage}/>
+                <InputFile
+                    name='image'
+                    uploadedImage={uploadedImage}
+                    setUploadedImage={setUploadedImage}
+                />
                 <Button type='submit' disabled={isLoading}>
                     {isLoading ? 'Adding Products...' : 'Add Products'}
                 </Button>

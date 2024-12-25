@@ -29,10 +29,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
             fullname: form.fullname.value,
             phone: form.phone.value,
         }
-        const result = await userServices.updateProfile(
-            data,
-            session.data?.accessToken,
-        )
+        const result = await userServices.updateProfile(data, session.data?.accessToken)
         if (result.status === 200) {
             setIsLoading('')
             setProfile({
@@ -54,40 +51,47 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
         setIsLoading('picture')
         const form = e.target as HTMLFormElement
         const file = form.image.files[0]
+        const newName = 'profile.' + file.name.split('.')[1]
         if (file) {
-            uploadFile(profile.id, file, async (status: any, newImageURL: string) => {
-                if (status) {
-                    const data = {
-                        image: newImageURL,
-                    }
-                    const result = await userServices.updateProfile(
-                        data,
-                        session.data?.accessToken,
-                    )
-                    if (result.status === 200) {
-                        setIsLoading('')
-                        setProfile({
-                            ...profile,
+            uploadFile(
+                profile.id,
+                file,
+                newName,
+                'users',
+                async (status: any, newImageURL: string) => {
+                    if (status) {
+                        const data = {
                             image: newImageURL,
-                        })
-                        setChangeImage({})
-                        form.reset()
-                        setToaster({
-                            variant: 'success',
-                            message: 'Profile Image Updated',
-                        })
+                        }
+                        const result = await userServices.updateProfile(
+                            data,
+                            session.data?.accessToken,
+                        )
+                        if (result.status === 200) {
+                            setIsLoading('')
+                            setProfile({
+                                ...profile,
+                                image: newImageURL,
+                            })
+                            setChangeImage({})
+                            form.reset()
+                            setToaster({
+                                variant: 'success',
+                                message: 'Profile Image Updated',
+                            })
+                        } else {
+                            setIsLoading('')
+                        }
                     } else {
                         setIsLoading('')
+                        setChangeImage({})
+                        setToaster({
+                            variant: 'danger',
+                            message: 'Failed Change Profile Picture',
+                        })
                     }
-                } else {
-                    setIsLoading('')
-                    setChangeImage({})
-                    setToaster({
-                        variant: 'danger',
-                        message: 'Failed Change Profile Picture',
-                    })
-                }
-            })
+                },
+            )
         }
     }
     const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
@@ -115,13 +119,12 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
             }
         } catch (error) {
             setIsLoading('')
-                setToaster({
-                    variant: 'danger',
-                    message: 'Old Password Incorrect',
-                })
+            setToaster({
+                variant: 'danger',
+                message: 'Old Password Incorrect',
+            })
         }
     }
-
 
     return (
         <MemberLayout>
@@ -152,7 +155,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 htmlFor='upload-image'
                             >
                                 {changeImage.name ? (
-                                        <p>{changeImage.name}</p>
+                                    <p>{changeImage.name}</p>
                                 ) : (
                                     <>
                                         <p>
@@ -251,7 +254,9 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 className={styles.profile__main__row__password__button}
                                 type='submit'
                                 variant='primary'
-                                disabled= {isLoading === 'password' || profile.type === 'google'}
+                                disabled={
+                                    isLoading === 'password' || profile.type === 'google'
+                                }
                             >
                                 {isLoading === 'password'
                                     ? 'Updating...'

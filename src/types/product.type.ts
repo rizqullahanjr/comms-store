@@ -7,6 +7,7 @@ export type Product = {
     id: string // Product ID
     stock: Stock[] // Array of stock information
     category: string // Product category (e.g., "Keychain")
+    availability: string // Product availability
     status: boolean // Product availability status
     image: string // URL of the product image
     updated_at: Date // Last updated timestamp

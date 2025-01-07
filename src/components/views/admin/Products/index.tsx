@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import AdminLayout from '@/components/layouts/AdminLayout'
@@ -9,6 +10,8 @@ import Image from 'next/image'
 import convertIDR from '@/utils/currency'
 import ModalAddProduct from './ModalAddProduct'
 import ModalUpdateProduct from './ModalUpdateProduct'
+import ModalDeleteProduct from './ModalDeleteProduct'
+import { useSession } from 'next-auth/react'
 
 type PropTypes = {
     products: Product[]
@@ -20,6 +23,8 @@ const ProductsAdminView = (props: PropTypes) => {
     const [productsData, setProductsData] = useState<Product[]>([])
     const [modalAddProduct, setModalAddProduct] = useState(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | {}>({})
+    const [deletedProduct, setDeletedProduct] = useState<Product | {}>({})
+    const session: any = useSession()
     useEffect(() => {
         setProductsData(products)
     }, [products])
@@ -140,6 +145,11 @@ const ProductsAdminView = (props: PropTypes) => {
                                                         className={
                                                             styles.products__table__actions__delete
                                                         }
+                                                        onClick={() =>
+                                                            setDeletedProduct(
+                                                                product,
+                                                            )
+                                                        }
                                                     >
                                                         <i className='bx bx-trash' />
                                                     </Button>
@@ -166,6 +176,15 @@ const ProductsAdminView = (props: PropTypes) => {
                     updatedProduct={updatedProduct}
                     setToaster={setToaster}
                     setProductsData={setProductsData}
+                />
+            )}
+            {Object.keys(deletedProduct).length && (
+                <ModalDeleteProduct
+                    deletedProduct={deletedProduct}
+                    setDeletedProduct={setDeletedProduct}
+                    setProductsData={setProductsData}
+                    setToaster={setToaster}
+                    session={session}
                 />
             )}
         </>

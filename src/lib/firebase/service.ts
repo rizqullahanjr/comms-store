@@ -14,7 +14,7 @@ import {
     deleteDoc,
 } from 'firebase/firestore'
 import app from './init'
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 
 const firestore = getFirestore(app)
 
@@ -122,4 +122,15 @@ export async function uploadFile(
     }
 
     return true
+}
+
+export async function deleteFile(url: string, callback: Function) {
+    const storageRef = ref(storage, url)
+    await deleteObject(storageRef)
+        .then(() => {
+            callback(true)
+        })
+        .catch(() => {
+            callback(false)
+        })
 }

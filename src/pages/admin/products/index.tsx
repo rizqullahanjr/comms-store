@@ -11,7 +11,6 @@ const AdminProductsPage = ({ setToaster }: any) => {
         setProducts(data.data)
     }
     useEffect(() => {
-        
         getAllProducts()
     }, [])
 

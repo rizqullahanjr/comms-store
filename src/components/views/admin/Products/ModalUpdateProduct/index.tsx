@@ -22,21 +22,18 @@ type Proptypes = {
 }
 
 const ModalUpdateProduct = (props: Proptypes) => {
-    const {
-        updatedProduct,
-        setUpdatedProduct,
-        setToaster,
-        setProductsData,
-    } = props
+    const { updatedProduct, setUpdatedProduct, setToaster, setProductsData } = props
     const [isLoading, setIsLoading] = useState(false)
     const [stockCount, setStockCount] = useState(updatedProduct.stock)
     const [uploadedImage, setUploadedImage] = useState<File | null>(null)
     const session: any = useSession()
+
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
-        newStockCount[i][type] = e.target.value
+        newStockCount[i][type] = type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
         setStockCount(newStockCount)
     }
+
     const uploadImage = (id: string, form: any) => {
         const file = form.image.files[0]
         const newName = 'main.' + file.name.split('.')[1]
@@ -61,8 +58,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
                             setUploadedImage(null)
                             form.reset()
                             setUpdatedProduct(false)
-                            const { data } =
-                                await productServices.getAllProducts()
+                            const { data } = await productServices.getAllProducts()
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
@@ -87,10 +83,10 @@ const ModalUpdateProduct = (props: Proptypes) => {
         }
     }
 
-    const updateProduct = async (newImageURL:string = updatedProduct.image, form:any) => {
+    const updateProduct = async (newImageURL: string = updatedProduct.image, form: any) => {
         const data = {
             name: form.name.value,
-            price: form.price.value,
+            price: Number(form.price.value), // Convert price to number
             category: form.category.value,
             availability: form.availability.value,
             stock: stockCount,
@@ -106,8 +102,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
             setUploadedImage(null)
             form.reset()
             setUpdatedProduct(false)
-            const { data } =
-                await productServices.getAllProducts()
+            const { data } = await productServices.getAllProducts()
             setProductsData(data.data)
             setToaster({
                 variant: 'success',
@@ -196,7 +191,11 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     <Image
                         width={200}
                         height={200}
-                        src={uploadedImage ? URL.createObjectURL(uploadedImage) : updatedProduct.image}
+                        src={
+                            uploadedImage
+                                ? URL.createObjectURL(uploadedImage)
+                                : updatedProduct.image
+                        }
                         alt='image'
                         className={styles.form__image__preview}
                     />
@@ -209,52 +208,48 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     </div>
                 </div>
                 <label htmlFor='stock'>Stock</label>
-                {stockCount.map(
-                    (item: { type: string; qty: number }, i: number) => (
-                        <div className={styles.form__stock} key={i}>
-                            <div className={styles.form__stock__item}>
-                                <Input
-                                    label='Type'
-                                    name='type'
-                                    type='text'
-                                    placeholder='Insert Stock Type'
-                                    onChange={e => {
-                                        handleStock(e, i, 'type')
-                                    }}
-                                    defaultValue={item.type}
-                                />
-                            </div>
-                            <div className={styles.form__stock__item}>
-                                <Input
-                                    label='QTY'
-                                    name='qty'
-                                    type='number'
-                                    placeholder='Insert Stock QTY'
-                                    onChange={e => {
-                                        handleStock(e, i, 'qty')
-                                    }}
-                                    defaultValue={item.qty}
-                                />
-                            </div>
+                {stockCount.map((item: { type: string; qty: number }, i: number) => (
+                    <div className={styles.form__stock} key={i}>
+                        <div className={styles.form__stock__item}>
+                            <Input
+                                label='Type'
+                                name='type'
+                                type='text'
+                                placeholder='Insert Stock Type'
+                                onChange={e => {
+                                    handleStock(e, i, 'type')
+                                }}
+                                defaultValue={item.type}
+                            />
                         </div>
-                    ),
-                )}
+                        <div className={styles.form__stock__item}>
+                            <Input
+                                label='QTY'
+                                name='qty'
+                                type='number'
+                                placeholder='Insert Stock QTY'
+                                onChange={e => {
+                                    handleStock(e, i, 'qty')
+                                }}
+                                defaultValue={item.qty}
+                            />
+                        </div>
+                    </div>
+                ))}
                 <Button
                     type='button'
-                    className={styles.form__stock_button}
+                    className={styles.form__stock__button}
                     onClick={() =>
                         setStockCount([
                             ...stockCount,
-                            { type: '', qty: 0 },
+                            { type: '', qty: 0 }, // Ensure qty is a number
                         ])
                     }
                 >
                     Add New Stock
                 </Button>
                 <Button type='submit' disabled={isLoading}>
-                    {isLoading
-                        ? 'Updating Products...'
-                        : 'Update Products'}
+                    {isLoading ? 'Updating Products...' : 'Update Products'}
                 </Button>
             </form>
         </Modal>

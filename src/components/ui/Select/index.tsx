@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from './Select.module.scss'
 type Option = {
     value: string
     label: string
+    selected?: boolean
 }
 
 type PropTypes = {
@@ -9,7 +11,7 @@ type PropTypes = {
     name: string
     defaultValue?: string
     disabled?: boolean
-    options: Option[]
+    options: Option[] | any
 }
 
 const Select = (props: PropTypes) => {
@@ -24,8 +26,8 @@ const Select = (props: PropTypes) => {
                 disabled={disabled}
                 className={styles.container__select}
             >
-                {options.map(option => (
-                    <option key={option.label} value={option.value}>
+                {options.map((option: Option) => (
+                    <option key={option.label} value={option.value} selected={option.selected}>
                         {option.label}
                     </option>
                 ))}

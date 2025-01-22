@@ -48,5 +48,8 @@
                 padding: 15px;
             }
         }
+        &__image{
+            object-fit: cover;
+        }
     }
 }

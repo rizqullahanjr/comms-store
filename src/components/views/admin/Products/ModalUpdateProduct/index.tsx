@@ -126,9 +126,8 @@ const ModalUpdateProduct = (props: Proptypes) => {
         event.preventDefault()
         setIsLoading(true)
         const form: any = event.target as HTMLFormElement
-
         const file = form.image.files[0]
-        
+
         if (file) {
             const newName = 'main.' + file.name.split('.')[1]
             uploadFile(
@@ -149,7 +148,8 @@ const ModalUpdateProduct = (props: Proptypes) => {
                 },
             )
         } else {
-            updatedProduct(form)
+            // Call updateProduct with the default image URL
+            updateProduct(updatedProduct.image, form)
         }
     }
 

@@ -10,7 +10,7 @@ type PropTypes = {
 const Card = (props: PropTypes) => {
     const { product } = props
     return (
-        <div className={styles.card} key={product.id}>
+        <div className={styles.card}>
             <Image
                 src={product.image}
                 alt={product.name}

@@ -58,58 +58,30 @@ const ProductsAdminView = (props: PropTypes) => {
                         <tbody>
                             {productsData.map((product, productIndex) =>
                                 product.stock.map((stock, stockIndex) => (
-                                    <tr
-                                        key={`${product.id}-${stockIndex}`}
-                                    >
+                                    <tr key={`${product.id}-${stockIndex}`}>
                                         {stockIndex === 0 && (
                                             <>
                                                 {/* Product-specific data spans multiple rows */}
-                                                <td
-                                                    rowSpan={
-                                                        product.stock
-                                                            .length
-                                                    }
-                                                >
+                                                <td rowSpan={product.stock.length}>
                                                     {productIndex + 1}
                                                 </td>
-                                                <td
-                                                    rowSpan={
-                                                        product.stock
-                                                            .length
-                                                    }
-                                                >
+                                                <td rowSpan={product.stock.length}>
                                                     <Image
                                                         src={product.image}
                                                         alt={`${product.name} image`}
                                                         width={100}
                                                         height={100}
+                                                        className={styles.products__table__image}
                                                     />
                                                 </td>
-                                                <td
-                                                    rowSpan={
-                                                        product.stock
-                                                            .length
-                                                    }
-                                                >
+                                                <td rowSpan={product.stock.length}>
                                                     {product.name}
                                                 </td>
-                                                <td
-                                                    rowSpan={
-                                                        product.stock
-                                                            .length
-                                                    }
-                                                >
+                                                <td rowSpan={product.stock.length}>
                                                     {product.category}
                                                 </td>
-                                                <td
-                                                    rowSpan={
-                                                        product.stock
-                                                            .length
-                                                    }
-                                                >
-                                                    {convertIDR(
-                                                        product.price,
-                                                    )}
+                                                <td rowSpan={product.stock.length}>
+                                                    {convertIDR(product.price)}
                                                 </td>
                                             </>
                                         )}
@@ -117,26 +89,14 @@ const ProductsAdminView = (props: PropTypes) => {
                                         <td>{stock.type}</td>
                                         <td>{stock.qty}</td>
                                         {stockIndex === 0 && (
-                                            <td
-                                                rowSpan={
-                                                    product.stock.length
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.products__table__actions
-                                                    }
-                                                >
+                                            <td rowSpan={product.stock.length}>
+                                                <div className={styles.products__table__actions}>
                                                     <Button
                                                         type='button'
                                                         className={
                                                             styles.products__table__actions__edit
                                                         }
-                                                        onClick={() =>
-                                                            setUpdatedProduct(
-                                                                product,
-                                                            )
-                                                        }
+                                                        onClick={() => setUpdatedProduct(product)}
                                                     >
                                                         <i className='bx bx-edit' />
                                                     </Button>
@@ -145,11 +105,7 @@ const ProductsAdminView = (props: PropTypes) => {
                                                         className={
                                                             styles.products__table__actions__delete
                                                         }
-                                                        onClick={() =>
-                                                            setDeletedProduct(
-                                                                product,
-                                                            )
-                                                        }
+                                                        onClick={() => setDeletedProduct(product)}
                                                     >
                                                         <i className='bx bx-trash' />
                                                     </Button>

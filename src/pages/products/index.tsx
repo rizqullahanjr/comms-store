@@ -1,5 +1,6 @@
 import ProductsView from "@/components/views/products";
 import productServices from "@/services/product";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 
 const ProductsPage = () => {
@@ -12,7 +13,14 @@ const ProductsPage = () => {
         getAllProducts()
     }, [])
 
-    return <ProductsView products={products} />
+    return (
+        <>
+        <Head>
+            <title>Products | Comms Store</title>
+        </Head>
+        <ProductsView products={products} />
+        </>
+    )
 }
 
 export default ProductsPage

@@ -60,5 +60,42 @@
         &__title {
             text-align: right;
         }
+        &__details {
+            margin-top: 20px;
+            &__item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+                font-size: 16px;
+                span {
+                    &:last-child {
+                        font-weight: bold;
+                    }
+                }
+                // Add border above and below the grand total
+                &:last-child {
+                    border-top: 1px solid #000;
+                    border-bottom: 1px solid #000;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+            }
+        }
+        // Styling for the Checkout Button
+        &__checkout {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            &:hover {
+                background-color: #0056b3;
+            }
+        }
     }
 }

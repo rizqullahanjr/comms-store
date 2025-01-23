@@ -43,7 +43,13 @@ const CartPage = (props: PropTypes) => {
             <Head>
                 <title>Cart | Comms Store</title>
             </Head>
-            <CartView cart={cart} products={products} />
+            <CartView
+                cart={cart}
+                products={products}
+                token={session.data?.accessToken || ''}
+                setCart={setCart}
+                setToaster={setToaster}
+            />
         </>
     )
 }

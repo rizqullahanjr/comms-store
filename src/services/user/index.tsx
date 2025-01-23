@@ -35,7 +35,6 @@ const userServices = {
                 },
             },
         ),
-
     getCart: (token: string) =>
         instance.get('/api/user/cart', {
             headers: {
@@ -43,6 +42,17 @@ const userServices = {
             },
         }),
     addToCart: (data: any, token: string) =>
+        instance.put(
+            `/api/user/cart`,
+            { data },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        ),
+    // Add updateCart function
+    updateCart: (data: any, token: string) =>
         instance.put(
             `/api/user/cart`,
             { data },

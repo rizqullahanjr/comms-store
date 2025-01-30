@@ -3,7 +3,7 @@ export type User = {
     fullname: string,
     email: string,
     phone: string,
-    role: string,
+    role?: string,
     image: string,
     updated_at: Date,
     created_at: Date,

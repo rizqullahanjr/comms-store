@@ -22,24 +22,31 @@ type Proptypes = {
 const CartView = (props: Proptypes) => {
     const { cart, products, token, setCart, setToaster } = props
 
+    // Get product by ID
     const getProduct = (id: string) => {
         const product = products.find(product => product.id === id)
         return product
     }
 
+    // Get options for the Select component
     const getOptionType = (id: string, selected: string) => {
         const product = products.find(product => product.id === id)
-        const options = product?.stock.map((stock: { type: string; qty: number }) => {
-            if (stock.qty > 0) {
-                return {
-                    label: stock.type,
-                    value: stock.type,
-                    selected: stock.type === selected,
+        if (!product || !product.stock) return [] // Return an empty array if product or stock is missing
+
+        const options = product.stock
+            .map((stock: { type: string; qty: number }) => {
+                if (stock.qty > 0) {
+                    return {
+                        label: stock.type,
+                        value: stock.type,
+                        selected: stock.type === selected,
+                    }
                 }
-            }
-        })
-        const data = options?.filter((option: any) => option !== undefined)
-        return data
+                return null // Return null for invalid options
+            })
+            .filter((option: any) => option !== null) // Filter out null values
+
+        return options
     }
 
     // Handle delete item from cart
@@ -96,10 +103,15 @@ const CartView = (props: Proptypes) => {
                                 <div className={styles.cart__main__list__item}>
                                     <div className={styles.cart__main__list__item__image}>
                                         <Image
-                                            src={`${product?.image}`}
+                                            src={product?.image || '/images/default-product.png'} // Fallback image
                                             alt={`${item.id}-${item.type}`}
                                             width={150}
                                             height={150}
+                                            onError={e => {
+                                                // Fallback if the image fails to load
+                                                ;(e.target as HTMLImageElement).src =
+                                                    '/images/default-product.png'
+                                            }}
                                         />
                                     </div>
                                     <div className={styles.cart__main__list__item__info}>

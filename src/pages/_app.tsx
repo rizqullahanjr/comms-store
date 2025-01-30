@@ -15,6 +15,7 @@ const lato = Lato({
 })
 
 const disableNavbar = ['auth', 'admin', 'member']
+
 export default function App({ Component, pageProps: { session, pageProps } }: AppProps) {
     const { pathname } = useRouter()
     const [toaster, setToaster] = useState<any>({

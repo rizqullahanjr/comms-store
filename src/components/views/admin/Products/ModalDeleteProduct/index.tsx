@@ -3,20 +3,21 @@
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import styles from './ModalDeleteProduct.module.scss'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { Product } from '@/types/product.type'
 import productServices from '@/services/product'
 import { deleteFile } from '@/lib/firebase/service'
+import { ToasterContext } from '@/contexts/ToasterContext'
 
 type PropTypes = {
     setProductsData: Dispatch<SetStateAction<Product[]>>
     deletedProduct: Product | any
-    setToaster: Dispatch<SetStateAction<{}>>
     setDeletedProduct: Dispatch<SetStateAction<{}>>
 }
 
 const ModalDeleteProduct = (props: PropTypes) => {
-    const { deletedProduct, setDeletedProduct, setProductsData, setToaster } = props
+    const { setToaster } = useContext(ToasterContext)
+    const { deletedProduct, setDeletedProduct, setProductsData } = props
     const [isLoading, setIsLoading] = useState(false)
     const handleDelete = async () => {
         const result = await productServices.deleteProduct(

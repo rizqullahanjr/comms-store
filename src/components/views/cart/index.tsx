@@ -7,19 +7,22 @@ import Image from 'next/image'
 import convertIDR from '@/utils/currency'
 import Select from '@/components/ui/Select'
 import Input from '@/components/ui/Input'
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Fragment, useContext } from 'react'
 import Button from '@/components/ui/Button'
 import userServices from '@/services/user' // Import userServices
+import { ToasterContext } from '@/contexts/ToasterContext'
 
 type Proptypes = {
     cart: any
     products: Product[]
     setCart: (cart: any) => void // Add setCart prop to update cart state
-    setToaster: Dispatch<SetStateAction<{}>> // Add setToaster prop
 }
 
 const CartView = (props: Proptypes) => {
-    const { cart, products, setCart, setToaster } = props
+
+    const { setToaster } = useContext(ToasterContext)
+
+    const { cart, products, setCart } = props
 
     // Get product by ID
     const getProduct = (id: string) => {

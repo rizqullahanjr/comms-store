@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import AdminLayout from '@/components/layouts/AdminLayout'
 import styles from './Products.module.scss'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { Product } from '@/types/product.type'
 import Image from 'next/image'
@@ -12,14 +12,15 @@ import ModalAddProduct from './ModalAddProduct'
 import ModalUpdateProduct from './ModalUpdateProduct'
 import ModalDeleteProduct from './ModalDeleteProduct'
 import { useSession } from 'next-auth/react'
+import { ToasterContext } from '@/contexts/ToasterContext'
 
 type PropTypes = {
     products: Product[]
-    setToaster: Dispatch<SetStateAction<{}>>
 }
 
 const ProductsAdminView = (props: PropTypes) => {
-    const { products, setToaster } = props
+    const { setToaster } = useContext(ToasterContext)
+    const { products } = props
     const [productsData, setProductsData] = useState<Product[]>([])
     const [modalAddProduct, setModalAddProduct] = useState(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | {}>({})
@@ -122,7 +123,6 @@ const ProductsAdminView = (props: PropTypes) => {
             {modalAddProduct && (
                 <ModalAddProduct
                     setModalAddProducts={setModalAddProduct}
-                    setToaster={setToaster}
                     setProductsData={setProductsData}
                 />
             )}
@@ -130,7 +130,6 @@ const ProductsAdminView = (props: PropTypes) => {
                 <ModalUpdateProduct
                     setUpdatedProduct={setUpdatedProduct}
                     updatedProduct={updatedProduct}
-                    setToaster={setToaster}
                     setProductsData={setProductsData}
                 />
             )}
@@ -139,7 +138,6 @@ const ProductsAdminView = (props: PropTypes) => {
                     deletedProduct={deletedProduct}
                     setDeletedProduct={setDeletedProduct}
                     setProductsData={setProductsData}
-                    setToaster={setToaster}
                 />
             )}
         </>

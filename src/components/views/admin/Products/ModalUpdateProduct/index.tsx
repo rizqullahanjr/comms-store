@@ -51,7 +51,6 @@ const ModalUpdateProduct = (props: Proptypes) => {
                         const result = await productServices.updateProduct(
                             id,
                             data,
-                            session.data?.accessToken,
                         )
                         if (result.status === 200) {
                             setIsLoading(false)
@@ -95,7 +94,6 @@ const ModalUpdateProduct = (props: Proptypes) => {
         const result = await productServices.updateProduct(
             updatedProduct.id,
             data,
-            session.data?.accessToken,
         )
         if (result.status === 200) {
             setIsLoading(false)

@@ -19,14 +19,17 @@ type PropTypes = {
 
 const DetailProductView = (props: PropTypes) => {
     const { product, cart, productId, setToaster } = props
-    const { status, data:session }:any = useSession()
+    const { status }: any = useSession()
     const router = useRouter()
     const [selectedType, setSelectedType] = useState('')
     console.log(product)
     const handleAddToCart = async () => {
         if (selectedType !== '') {
             let newCart = []
-            if (cart.filter((item: any) => item.id === productId && item.type === selectedType).length > 0) {
+            if (
+                cart.filter((item: any) => item.id === productId && item.type === selectedType)
+                    .length > 0
+            ) {
                 newCart = cart.map((item: any) => {
                     if (item.id === productId && item.type === selectedType) {
                         item.qty += 1
@@ -35,18 +38,18 @@ const DetailProductView = (props: PropTypes) => {
                 })
             } else {
                 newCart = [
-                    ...cart, 
+                    ...cart,
                     {
-                    id: productId,
-                    type: selectedType,
-                    qty: 1,
-                    }
+                        id: productId,
+                        type: selectedType,
+                        qty: 1,
+                    },
                 ]
             }
             try {
                 const result = await userServices.addToCart({
-                    carts: newCart
-                }, session?.accessToken)
+                    carts: newCart,
+                })
                 if (result.status === 200) {
                     setSelectedType('')
                     setToaster({

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -15,11 +14,10 @@ type PropTypes = {
     updatedUser: User | any
     setToaster: Dispatch<SetStateAction<{}>>
     setUpdatedUser: Dispatch<SetStateAction<{}>>
-    session: any
 }
 
 const ModalUpdateUser = (props: PropTypes) => {
-    const { updatedUser, setUpdatedUser, setUsersData, setToaster, session } = props
+    const { updatedUser, setUpdatedUser, setUsersData, setToaster} = props
     const [isLoading, setIsLoading] = useState(false)
     const handleUpdateUser = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -32,7 +30,6 @@ const ModalUpdateUser = (props: PropTypes) => {
         const result = await userServices.updateUser(
             updatedUser.id,
             data,
-            session.data?.accessToken,
         )
         if (result.status === 200) {
             setIsLoading(false)

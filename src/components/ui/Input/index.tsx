@@ -10,10 +10,12 @@ type PropTypes = {
     disabled?: boolean
     onChange?: (e:any) => void
     className?: string
+    required?: boolean
+    minLength?: number
 }
 
 const Input = (props: PropTypes) => {
-    const { label, name, type, placeholder, defaultValue, disabled, onChange, className } = props
+    const { label, name, type, placeholder, defaultValue, disabled, onChange, className, required, minLength } = props
     return (
         <div className={`${styles.container} ${className}`}>
             {label && <label htmlFor={name}>{label} </label>}
@@ -26,6 +28,8 @@ const Input = (props: PropTypes) => {
                 defaultValue={defaultValue}
                 disabled={disabled}
                 onChange={onChange}
+                required={required}
+                minLength={minLength}
             />
         </div>
     )

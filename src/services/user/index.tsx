@@ -1,66 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/lib/axios/instance'
 
+const endpoint = {
+    users: '/api/user',
+    profile: '/api/user/profile',
+    cart: '/api/user/cart',
+}
+
 const userServices = {
-    getAllUsers: () => instance.get('/api/user'),
-    updateUser: (id: string, data: any, token: string) =>
+    getAllUsers: () => instance.get(endpoint.users),
+    updateUser: (id: string, data: any) =>
         instance.put(
-            `/api/user/${id}`,
+            `${endpoint.users}/${id}`,
             { data },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
         ),
-    deleteUser: (id: string, token: string) =>
-        instance.delete(`/api/user/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }),
-    getProfile: (token: string) =>
-        instance.get('/api/user/profile', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }),
-    updateProfile: (data: any, token: string) =>
+    deleteUser: (id: string) =>
+        instance.delete(`${endpoint.users}/${id}`),
+    getProfile: () =>
+        instance.get(endpoint.profile),
+    updateProfile: (data: any) =>
         instance.put(
-            `/api/user/profile/`,
+            `${endpoint.profile}`,
             { data },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
         ),
-    getCart: (token: string) =>
-        instance.get('/api/user/cart', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }),
-    addToCart: (data: any, token: string) =>
+    getCart: () =>
+        instance.get(endpoint.cart),
+    addToCart: (data: any) =>
         instance.put(
-            `/api/user/cart`,
+            `${endpoint.cart}`,
             { data },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
         ),
-    // Add updateCart function
-    updateCart: (data: any, token: string) =>
+    updateCart: (data: any) =>
         instance.put(
-            `/api/user/cart`,
+            `${endpoint.cart}`,
             { data },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
         ),
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import AdminLayout from '@/components/layouts/AdminLayout'
 import styles from './Users.module.scss'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -7,7 +7,6 @@ import ModalUpdateUser from './ModalUpdateUser'
 import Button from '@/components/ui/Button'
 import ModalDeleteUser from './ModalDeleteUser'
 import { User } from '@/types/user.type'
-import { useSession } from 'next-auth/react'
 
 type PropTypes = {
     users: User[]
@@ -16,7 +15,6 @@ type PropTypes = {
 
 const UsersAdminView = (props: PropTypes) => {
     const [updatedUser, setUpdatedUser] = useState<User | {}>({})
-    const session: any = useSession()
     const [usersData, setUsersData] = useState<User[]>([])
     const [deletedUser, setDeletedUser] = useState<User | {}>({})
     const { users, setToaster } = props
@@ -80,7 +78,6 @@ const UsersAdminView = (props: PropTypes) => {
                     setUpdatedUser={setUpdatedUser}
                     setUsersData={setUsersData}
                     setToaster={setToaster}
-                    session={session}
                 />
             )}
             {Object.keys(deletedUser).length && (
@@ -89,7 +86,6 @@ const UsersAdminView = (props: PropTypes) => {
                     setDeletedUser={setDeletedUser}
                     setUsersData={setUsersData}
                     setToaster={setToaster}
-                    session={session}
                 />
             )}
         </>

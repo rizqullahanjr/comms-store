@@ -14,13 +14,12 @@ import userServices from '@/services/user' // Import userServices
 type Proptypes = {
     cart: any
     products: Product[]
-    token: string // Add token prop
     setCart: (cart: any) => void // Add setCart prop to update cart state
     setToaster: Dispatch<SetStateAction<{}>> // Add setToaster prop
 }
 
 const CartView = (props: Proptypes) => {
-    const { cart, products, token, setCart, setToaster } = props
+    const { cart, products, setCart, setToaster } = props
 
     // Get product by ID
     const getProduct = (id: string) => {
@@ -56,7 +55,7 @@ const CartView = (props: Proptypes) => {
             const updatedCart = cart.filter((item: { id: string }) => item.id !== id)
 
             // Update the cart in Firebase
-            await userServices.updateCart({ carts: updatedCart }, token)
+            await userServices.updateCart({ carts: updatedCart })
 
             // Update the local state
             setCart(updatedCart)

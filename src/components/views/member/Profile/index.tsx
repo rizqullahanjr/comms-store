@@ -7,20 +7,30 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Image from 'next/image'
 import { uploadFile } from '@/lib/firebase/service'
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
 import userServices from '@/services/user'
 import { User } from '@/types/user.type'
 
 type PropTypes = {
-    profile: User | any
     setToaster: Dispatch<SetStateAction<{}>>
-    setProfile: Dispatch<SetStateAction<{}>>
-    session: any
 }
 
-const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTypes) => {
+const ProfileMemberView = ({ setToaster }: PropTypes) => {
+    const [profile, setProfile] = useState<User | any>({})
     const [changeImage, setChangeImage] = useState<File | any>({})
     const [isLoading, setIsLoading] = useState('')
+
+    // Fetch profile data
+    const getProfile = async () => {
+        const { data } = await userServices.getProfile()
+        setProfile(data.data)
+    }
+
+    useEffect(() => {
+        getProfile()
+    }, [])
+
+    // Handle profile update (fullname, phone)
     const handleChangeProfile = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('profile')
@@ -29,29 +39,39 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
             fullname: form.fullname.value,
             phone: form.phone.value,
         }
-        const result = await userServices.updateProfile(data, session.data?.accessToken)
-        if (result.status === 200) {
+
+        try {
+            const result = await userServices.updateProfile(data)
+            if (result.status === 200) {
+                setIsLoading('')
+                setProfile({
+                    ...profile,
+                    fullname: data.fullname,
+                    phone: data.phone,
+                })
+                form.reset()
+                setToaster({
+                    variant: 'success',
+                    message: 'Profile Updated Successfully',
+                })
+            }
+        } catch (error) {
             setIsLoading('')
-            setProfile({
-                ...profile,
-                fullname: data.fullname,
-                phone: data.phone,
-            })
-            form.reset()
             setToaster({
-                variant: 'success',
-                message: 'Profile Updated',
+                variant: 'danger',
+                message: 'Failed to Update Profile',
             })
-        } else {
-            setIsLoading('')
         }
     }
+
+    // Handle profile picture update
     const handleChangeProfilePicture = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('picture')
         const form = e.target as HTMLFormElement
         const file = form.image.files[0]
         const newName = 'profile.' + file.name.split('.')[1]
+
         if (file) {
             uploadFile(
                 profile.id,
@@ -63,10 +83,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                         const data = {
                             image: newImageURL,
                         }
-                        const result = await userServices.updateProfile(
-                            data,
-                            session.data?.accessToken,
-                        )
+                        const result = await userServices.updateProfile(data)
                         if (result.status === 200) {
                             setIsLoading('')
                             setProfile({
@@ -77,7 +94,7 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                             form.reset()
                             setToaster({
                                 variant: 'success',
-                                message: 'Profile Image Updated',
+                                message: 'Profile Image Updated Successfully',
                             })
                         } else {
                             setIsLoading('')
@@ -87,13 +104,15 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                         setChangeImage({})
                         setToaster({
                             variant: 'danger',
-                            message: 'Failed Change Profile Picture',
+                            message: 'Failed to Change Profile Picture',
                         })
                     }
                 },
             )
         }
     }
+
+    // Handle password change
     const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading('password')
@@ -101,23 +120,23 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
         const data = {
             password: form['new-password'].value,
             oldPassword: form['old-password'].value,
-            encryptedPassword: profile.password,
+            encryptedPassword: profile.password, // Use the encrypted password from the backend
         }
+
         try {
-            const result = await userServices.updateProfile(
-                data,
-                session.data?.accessToken,
-            )
+            const result = await userServices.updateProfile(data)
             if (result.status === 200) {
                 setIsLoading('')
                 form.reset()
-                setProfile({ ...profile, password: data.password })
+                // Refetch profile to get the updated encrypted password
+                await getProfile()
                 setToaster({
                     variant: 'success',
-                    message: 'Profile Updated',
+                    message: 'Password Updated Successfully',
                 })
             }
         } catch (error) {
+            console.log(error)
             setIsLoading('')
             setToaster({
                 variant: 'danger',
@@ -131,10 +150,9 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
             <h1 className={styles.profile__title}>Profile</h1>
             <div className={styles.profile__main}>
                 <div className={styles.profile__main__row}>
+                    {/* Profile Image Section */}
                     <div className={styles.profile__main__row__avatar}>
-                        <h2 className={styles.profile__main__row__avatar__title}>
-                            Profile Image
-                        </h2>
+                        <h2 className={styles.profile__main__row__avatar__title}>Profile Image</h2>
                         {profile.image ? (
                             <Image
                                 className={styles.profile__main__row__avatar__image}
@@ -145,7 +163,6 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                             />
                         ) : (
                             <div className={styles.profile__main__row__avatar__image}>
-                                {/* No Image Uploaded */}
                                 {profile?.fullname?.charAt(0)}
                             </div>
                         )}
@@ -159,8 +176,8 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 ) : (
                                     <>
                                         <p>
-                                            Upload a new Avatar, larger image will be
-                                            resized automatically
+                                            Upload a new Avatar, larger image will be resized
+                                            automatically
                                         </p>
                                         <p>
                                             Max size allowed <b>1MB</b>
@@ -187,6 +204,8 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                             </Button>
                         </form>
                     </div>
+
+                    {/* Profile Details Section */}
                     <div className={styles.profile__main__row__detail}>
                         <h2 className={styles.profile__main__row__detail__title}>
                             Profile Details
@@ -211,15 +230,15 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 defaultValue={profile.email}
                                 placeholder='Email'
                                 type='email'
-                                label='email'
+                                label='Email'
                                 disabled
                             />
                             <Input
                                 name='role'
                                 defaultValue={profile.role}
-                                placeholder='role'
-                                type='role'
-                                label='role'
+                                placeholder='Role'
+                                type='text'
+                                label='Role'
                                 disabled
                             />
                             <Button
@@ -227,12 +246,12 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 type='submit'
                                 variant='primary'
                             >
-                                {isLoading === 'profile'
-                                    ? 'Updating...'
-                                    : 'Update Profile'}
+                                {isLoading === 'profile' ? 'Updating...' : 'Update Profile'}
                             </Button>
                         </form>
                     </div>
+
+                    {/* Password Change Section */}
                     <div className={styles.profile__main__row__password}>
                         <h2 className={styles.profile__main__row__password__title}>
                             Password Change
@@ -243,24 +262,23 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                                 type='password'
                                 label='Old Password'
                                 disabled={profile.type === 'google'}
+                                required
                             />
                             <Input
                                 name='new-password'
                                 type='password'
                                 label='New Password'
                                 disabled={profile.type === 'google'}
+                                required
+                                minLength={8}
                             />
                             <Button
                                 className={styles.profile__main__row__password__button}
                                 type='submit'
                                 variant='primary'
-                                disabled={
-                                    isLoading === 'password' || profile.type === 'google'
-                                }
+                                disabled={isLoading === 'password' || profile.type === 'google'}
                             >
-                                {isLoading === 'password'
-                                    ? 'Updating...'
-                                    : 'Update Password'}
+                                {isLoading === 'password' ? 'Updating...' : 'Update Password'}
                             </Button>
                         </form>
                     </div>

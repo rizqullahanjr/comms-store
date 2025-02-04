@@ -13,16 +13,15 @@ type PropTypes = {
     deletedProduct: Product | any
     setToaster: Dispatch<SetStateAction<{}>>
     setDeletedProduct: Dispatch<SetStateAction<{}>>
-    session: any
 }
 
 const ModalDeleteProduct = (props: PropTypes) => {
-    const { deletedProduct, setDeletedProduct, setProductsData, setToaster, session } = props
+    const { deletedProduct, setDeletedProduct, setProductsData, setToaster } = props
     const [isLoading, setIsLoading] = useState(false)
     const handleDelete = async () => {
         const result = await productServices.deleteProduct(
             deletedProduct.id, 
-            session.data?.accessToken)
+            )
             if (result.status === 200) {
                 setIsLoading(false)
                 deleteFile(`/images/products/${deletedProduct.id}/${deletedProduct.image.split('%2F')[3].split('?')[0]}`, async (status:boolean) => {

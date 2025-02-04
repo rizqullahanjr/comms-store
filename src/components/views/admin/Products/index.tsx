@@ -140,7 +140,6 @@ const ProductsAdminView = (props: PropTypes) => {
                     setDeletedProduct={setDeletedProduct}
                     setProductsData={setProductsData}
                     setToaster={setToaster}
-                    session={session}
                 />
             )}
         </>

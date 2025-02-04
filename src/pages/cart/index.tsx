@@ -18,8 +18,8 @@ const CartPage = (props: PropTypes) => {
     const [products, setProducts] = useState([])
     const [cart, setCart] = useState([])
 
-    const getCart = async (token: string) => {
-        const { data } = await userServices.getCart(token)
+    const getCart = async () => {
+        const { data } = await userServices.getCart()
         setCart(data.data)
     }
 
@@ -34,7 +34,7 @@ const CartPage = (props: PropTypes) => {
 
     useEffect(() => {
         if (session.data?.accessToken) {
-            getCart(session.data?.accessToken)
+            getCart()
         }
     }, [session])
 
@@ -46,7 +46,6 @@ const CartPage = (props: PropTypes) => {
             <CartView
                 cart={cart}
                 products={products}
-                token={session.data?.accessToken || ''}
                 setCart={setCart}
                 setToaster={setToaster}
             />

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { signIn } from 'next-auth/react'
 import styles from './Login.module.scss'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import AuthLayout from '@/components/layouts/AuthLayout'
+import { ToasterContext } from '@/contexts/ToasterContext'
 
-const LoginView = ({setToaster}: {setToaster: Dispatch<SetStateAction<{}>>}) => {
+const LoginView = () => {
+    const { setToaster } = useContext(ToasterContext)
     const [isLoading, setIsLoading] = useState(false)
     const { push, query } = useRouter()
 
@@ -43,6 +43,7 @@ const LoginView = ({setToaster}: {setToaster: Dispatch<SetStateAction<{}>>}) => 
                 })
             }
         } catch (error) {
+            console.log(error)
             setIsLoading(false)
             setToaster({
                 variant: 'danger',

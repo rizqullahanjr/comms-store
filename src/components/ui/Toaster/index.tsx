@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ToasterContext } from '@/contexts/ToasterContext'
 import styles from './Toaster.module.scss'
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { ToasterType } from '@/types/toaster.type'
 
-type PropTypes = {
-    variant: string
-    message?: string
-    setToaster: Dispatch<SetStateAction<{}>>
-}
 
 const toasterVariant: any = {
     success: {
@@ -29,8 +26,8 @@ const toasterVariant: any = {
         barColor: '#e9b949',
     },
 }
-const Toaster = (props: PropTypes) => {
-    const { variant = 'warning', message, setToaster } = props
+const Toaster = () => {
+    const { toaster, setToaster }:ToasterType = useContext(ToasterContext)
     const [lengthBar, setlengthBar] = useState(100)
     const timerRef = useRef<any>(null)
 
@@ -45,34 +42,40 @@ const Toaster = (props: PropTypes) => {
         return () => clearInterval(timerRef.current)
     }, [])
 
+    useEffect(() => {
+        if (lengthBar <= 0) {
+            setToaster({})
+        }
+    }, [lengthBar, setToaster])
+
     return (
-        <div className={`${styles.toaster} ${styles[`toaster--${variant}`]}`}>
+        <div className={`${styles.toaster} ${styles[`toaster--${toaster.variant}`]}`}>
             <div className={styles.toaster__main}>
                 <div className={styles.toaster__main__icon}>
                     <i
-                        className={`bx ${toasterVariant[variant].icon}`}
-                        style={{ color: toasterVariant[variant].color }}
+                        className={`bx ${toasterVariant[`${toaster.variant}`].icon}`}
+                        style={{ color: toasterVariant[`${toaster.variant}`].color }}
                     />
                 </div>
                 <div className={styles.toaster__main__text}>
                     <p className={styles.toaster__main__text__title}>
-                        {toasterVariant[variant].title}
+                        {toasterVariant[`${toaster.variant}`].title}
                     </p>
-                    <p className={styles.toaster__main__text__message}>{message}</p>
+                    <p className={styles.toaster__main__text__message}>{toaster.message}</p>
                 </div>
                 <i className={`bx bx-x ${styles.toaster__main__close}`} onClick={() => setToaster({})} />
             </div>
             <div
                 className={styles.toaster__timer}
                 style={{
-                    backgroundColor: toasterVariant[variant].color,
+                    backgroundColor: toasterVariant[`${toaster.variant}`].color,
                 }}
             >
                 <div
                     style={{
                         width: `${lengthBar}%`,
                         height: '100%',
-                        backgroundColor: toasterVariant[variant].barColor,
+                        backgroundColor: toasterVariant[`${toaster.variant}`].barColor,
                     }}
                 />
             </div>

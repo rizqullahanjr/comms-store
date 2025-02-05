@@ -27,7 +27,8 @@ const ModalAddProduct = (props: Proptypes) => {
 
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
-        newStockCount[i][type] = type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
+        newStockCount[i][type] =
+            type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
         setStockCount(newStockCount)
     }
 
@@ -54,7 +55,8 @@ const ModalAddProduct = (props: Proptypes) => {
                             setUploadedImage(null)
                             form.reset()
                             setModalAddProducts(false)
-                            const { data } = await productServices.getAllProducts()
+                            const { data } =
+                                await productServices.getAllProducts()
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
@@ -79,10 +81,28 @@ const ModalAddProduct = (props: Proptypes) => {
         }
     }
 
+    const validateImageSize = (file: File) => {
+        const maxSize = 1 * 1024 * 1024 // 1MB in bytes
+        if (file.size > maxSize) {
+            setToaster({
+                variant: 'danger',
+                message: 'Image size should not exceed 1MB',
+            })
+            return false
+        }
+        return true
+    }
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setIsLoading(true)
         const form: any = event.target as HTMLFormElement
+
+        const file = form.image.files[0]
+        if (file && !validateImageSize(file)) {
+            setIsLoading(false)
+            return
+        }
 
         // Convert price and qty to numbers
         const data = {
@@ -108,8 +128,18 @@ const ModalAddProduct = (props: Proptypes) => {
         <Modal onClose={() => setModalAddProducts(false)}>
             <h1>Add Product</h1>
             <form className={styles.form} onSubmit={handleSubmit}>
-                <Input label='Name' name='name' type='text' placeholder='Insert Product Name' />
-                <Input label='Price' name='price' type='number' placeholder='Product Price' />
+                <Input
+                    label='Name'
+                    name='name'
+                    type='text'
+                    placeholder='Insert Product Name'
+                />
+                <Input
+                    label='Price'
+                    name='price'
+                    type='number'
+                    placeholder='Product Price'
+                />
                 <Select
                     label='Category'
                     name='category'
@@ -129,32 +159,34 @@ const ModalAddProduct = (props: Proptypes) => {
                     ]}
                 />
                 <label htmlFor='stock'>Stock</label>
-                {stockCount.map((item: { type: string; qty: number }, i: number) => (
-                    <div className={styles.form__stock} key={i}>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='Type'
-                                name='type'
-                                type='text'
-                                placeholder='Insert Stock Type'
-                                onChange={e => {
-                                    handleStock(e, i, 'type')
-                                }}
-                            />
+                {stockCount.map(
+                    (item: { type: string; qty: number }, i: number) => (
+                        <div className={styles.form__stock} key={i}>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='Type'
+                                    name='type'
+                                    type='text'
+                                    placeholder='Insert Stock Type'
+                                    onChange={e => {
+                                        handleStock(e, i, 'type')
+                                    }}
+                                />
+                            </div>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='QTY'
+                                    name='qty'
+                                    type='number'
+                                    placeholder='Insert Stock QTY'
+                                    onChange={e => {
+                                        handleStock(e, i, 'qty')
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='QTY'
-                                name='qty'
-                                type='number'
-                                placeholder='Insert Stock QTY'
-                                onChange={e => {
-                                    handleStock(e, i, 'qty')
-                                }}
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ),
+                )}
                 <Button
                     type='button'
                     className={styles.form__stock_button}

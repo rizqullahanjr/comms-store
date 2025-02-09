@@ -47,7 +47,8 @@ const DetailProductView = (props: PropTypes) => {
                         name: product.name,
                         image: product?.image ?? '/default-product.png',
                         type: selectedType,
-                        qty: 1
+                        qty: 1,
+                        price: product.price
                     }
                 ]
             }
@@ -69,10 +70,8 @@ const DetailProductView = (props: PropTypes) => {
                     message: 'Failed to Add to Cart'
                 })
             }
-            console.log(newCart)
         }
     }
-    console.log(status)
     return (
         <div className={styles.detail}>
             <div className={styles.detail__main}>

@@ -120,7 +120,7 @@ const ModalAddProduct = (props: Proptypes) => {
                 type: stock.type,
                 qty: Number(stock.qty) // Convert qty to number
             })),
-            image: ''
+            image: null
         }
 
         const result = await productServices.addProduct(data)

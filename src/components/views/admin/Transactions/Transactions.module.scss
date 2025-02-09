@@ -1,4 +1,4 @@
-.users {
+.orders {
     &__table {
         width: 100%;
         border-spacing: 0;
@@ -24,17 +24,12 @@
             i {
                 font-size: 15px;
             }
-            &__delete {
-                cursor: pointer;
-                background-color: red;
-                color: black;
-                padding: 15px;
-            }
-            &__edit {
+            &__detail {
                 cursor: pointer;
                 background-color: aqua;
                 color: black;
                 padding: 15px;
+                width: fit-content;
             }
         }
     }

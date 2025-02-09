@@ -24,9 +24,10 @@
             i {
                 font-size: 15px;
             }
-            &__delete {
+            &__detail {
                 cursor: pointer;
-                background-color: red;
+                width: fit-content;
+                background-color: rgb(30, 255, 0);
                 color: black;
                 padding: 15px;
             }

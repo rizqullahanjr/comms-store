@@ -101,15 +101,47 @@ const Modal = (props: PropTypes) => {
         }
     }
 
+    const removeAddress = async (index: number) => {
+        const address = [...profile?.address]
+        address.splice(index, 1)
+        if (address.length > 0) {
+            address[index != 0 ? index - 1 : 0].isMain = true
+        }
+
+        const data = {
+            address: address
+        }
+
+        try {
+            const result = await userServices.updateProfile(data)
+            if (result.status === 200) {
+                setProfile({
+                    ...profile,
+                    address: data.address
+                })
+                setToaster({
+                    variant: 'success',
+                    message: 'Profile Updated Successfully'
+                })
+            }
+        } catch (e) {
+            setToaster({
+                variant: 'danger',
+                message: 'Failed to Update Profile'
+            })
+        }
+    }
+
     return (
         <div className={styles.modal}>
             <div className={styles.modal__main} ref={ref}>
                 <h2>Change Address</h2>
                 <div className={styles.modal__main__address}>
-                    {profile?.address?.map((v: any, i: any) => (
+                    {profile?.address?.map((v: any, i: number) => (
                         <>
                             <div
                                 className={`${styles.modal__main__address__area} ${selectedAddress == i && styles.modal__main__address__area__active}`}
+                                key={i.toString()}
                             >
                                 <div
                                     className={
@@ -142,6 +174,7 @@ const Modal = (props: PropTypes) => {
                                         styles.modal__main__address__button
                                     }
                                     type='button'
+                                    onClick={() => removeAddress(i)}
                                 >
                                     <i className='bx bx-trash'></i>
                                 </Button>

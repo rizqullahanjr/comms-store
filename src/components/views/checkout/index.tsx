@@ -97,7 +97,7 @@ const CheckoutView = (props: Proptypes) => {
                     <h1 className={styles.checkout__main__title}>
                         Checkout Page
                     </h1>
-                    {profile?.address ? (
+                    {profile?.address && profile.address.length > 0 ? (
                         <div className={styles.checkout__main__address}>
                             <h3
                                 className={

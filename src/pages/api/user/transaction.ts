@@ -14,7 +14,7 @@ export default async function handler(
             const data: any[] = []
 
             users.forEach((user: any) =>
-                user.transactions.map((transaction: any) => {
+                user.transactions?.map((transaction: any) => {
                     data.push({
                         ...transaction,
                         user: {

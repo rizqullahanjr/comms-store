@@ -53,6 +53,12 @@ const ModalDetails = (props: PropTypes) => {
                         </div>
                     ))}
                 </div>
+                <div>
+                    <h3>Shipping Address</h3>
+                    <h4>{data.address.recipient}</h4>
+                    {data.address.addressline} ({data.address.note})
+                    <div>No Telp: +{data.address.phone}</div>
+                </div>
             </div>
         </div>
     )

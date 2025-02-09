@@ -19,7 +19,6 @@ type Proptypes = {
 }
 
 const CartView = (props: Proptypes) => {
-
     const { setToaster } = useContext(ToasterContext)
 
     const { cart, products, setCart } = props
@@ -41,7 +40,7 @@ const CartView = (props: Proptypes) => {
                     return {
                         label: stock.type,
                         value: stock.type,
-                        selected: stock.type === selected,
+                        selected: stock.type === selected
                     }
                 }
                 return null // Return null for invalid options
@@ -55,7 +54,9 @@ const CartView = (props: Proptypes) => {
     const handleDelete = async (id: string) => {
         try {
             // Remove the item from the cart locally
-            const updatedCart = cart.filter((item: { id: string }) => item.id !== id)
+            const updatedCart = cart.filter(
+                (item: { id: string }) => item.id !== id
+            )
 
             // Update the cart in Firebase
             await userServices.updateCart({ carts: updatedCart })
@@ -64,19 +65,28 @@ const CartView = (props: Proptypes) => {
             setCart(updatedCart)
 
             // Show success Toaster
-            setToaster({ variant: 'success', message: 'Product removed from cart' })
+            setToaster({
+                variant: 'success',
+                message: 'Product removed from cart'
+            })
         } catch (error) {
             console.error('Failed to delete item:', error)
-            setToaster({ variant: 'danger', message: 'Failed to remove product from cart' })
+            setToaster({
+                variant: 'danger',
+                message: 'Failed to remove product from cart'
+            })
         }
     }
 
     // Calculate total price, tax, and shipping cost
     const calculateSummary = () => {
-        const totalPrice = cart.reduce((acc: number, item: { id: string; qty: number }) => {
-            const product = getProduct(item.id)
-            return acc + (product ? product.price * item.qty : 0)
-        }, 0)
+        const totalPrice = cart.reduce(
+            (acc: number, item: { id: string; qty: number }) => {
+                const product = getProduct(item.id)
+                return acc + (product ? product.price * item.qty : 0)
+            },
+            0
+        )
 
         const tax = totalPrice * 0.1 // 10% tax
         const shippingCost = 0 // Placeholder for shipping cost
@@ -85,7 +95,7 @@ const CartView = (props: Proptypes) => {
             totalPrice,
             tax,
             shippingCost,
-            grandTotal: totalPrice + tax + shippingCost,
+            grandTotal: totalPrice + tax + shippingCost
         }
     }
 
@@ -96,77 +106,115 @@ const CartView = (props: Proptypes) => {
             <div className={styles.cart__main}>
                 <h1 className={styles.cart__main__title}>Cart Page</h1>
                 <div className={styles.cart__main__list}>
-                    {cart.map((item: { id: string; type: string; qty: number; name: string }) => {
-                        const product = getProduct(item.id)
-                        const totalPrice = product ? product.price * item.qty : 0
+                    {cart.map(
+                        (item: {
+                            id: string
+                            type: string
+                            qty: number
+                            name: string
+                        }) => {
+                            const product = getProduct(item.id)
+                            const totalPrice = product
+                                ? product.price * item.qty
+                                : 0
 
-                        return (
-                            <Fragment key={`${item.id}-${item.type}`}>
-                                <div className={styles.cart__main__list__item}>
-                                    <div className={styles.cart__main__list__item__image}>
-                                        <Image
-                                            src={product?.image || '/images/default-product.png'} // Fallback image
-                                            alt={`${item.id}-${item.type}`}
-                                            width={150}
-                                            height={150}
-                                            onError={e => {
-                                                // Fallback if the image fails to load
-                                                ;(e.target as HTMLImageElement).src =
-                                                    '/images/default-product.png'
-                                            }}
-                                        />
-                                    </div>
-                                    <div className={styles.cart__main__list__item__info}>
-                                        <h3 className={styles.cart__main__list__item__info__title}>
-                                            {product?.name}
-                                        </h3>
-                                        <p
+                            return (
+                                <Fragment key={`${item.id}-${item.type}`}>
+                                    <div
+                                        className={
+                                            styles.cart__main__list__item
+                                        }
+                                    >
+                                        <div
                                             className={
-                                                styles.cart__main__list__item__info__category
+                                                styles.cart__main__list__item__image
                                             }
                                         >
-                                            {product?.category}
-                                        </p>
-                                        <div className={styles.cart__main__list__item__info__data}>
-                                            <div
-                                                className={
-                                                    styles.cart__main__list__item__info__data__variant
-                                                }
-                                            >
-                                                <h4>Variant</h4>
-                                                <Select
-                                                    name='type'
-                                                    options={getOptionType(item.id, item.type)}
-                                                />
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.cart__main__list__item__info__data__qty
-                                                }
-                                            >
-                                                <h4>Quantity</h4>
-                                                <Input
-                                                    type='number'
-                                                    name='qty'
-                                                    defaultValue={item.qty}
-                                                />
-                                            </div>
+                                            <Image
+                                                src={
+                                                    product?.image ??
+                                                    '/default-product.png'
+                                                } // Fallback image
+                                                alt={`${item.id}-${item.type}`}
+                                                width={150}
+                                                height={150}
+                                            />
                                         </div>
-                                        <button
-                                            type='button'
-                                            className={styles.cart__main__list__item__info__delete}
-                                            onClick={() => handleDelete(item.id)} // Call handleDelete
+                                        <div
+                                            className={
+                                                styles.cart__main__list__item__info
+                                            }
                                         >
-                                            <i className='bx bx-trash' />
-                                        </button>
+                                            <h3
+                                                className={
+                                                    styles.cart__main__list__item__info__title
+                                                }
+                                            >
+                                                {product?.name}
+                                            </h3>
+                                            <p
+                                                className={
+                                                    styles.cart__main__list__item__info__category
+                                                }
+                                            >
+                                                {product?.category}
+                                            </p>
+                                            <div
+                                                className={
+                                                    styles.cart__main__list__item__info__data
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.cart__main__list__item__info__data__variant
+                                                    }
+                                                >
+                                                    <h4>Variant</h4>
+                                                    <Select
+                                                        name='type'
+                                                        options={getOptionType(
+                                                            item.id,
+                                                            item.type
+                                                        )}
+                                                    />
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.cart__main__list__item__info__data__qty
+                                                    }
+                                                >
+                                                    <h4>Quantity</h4>
+                                                    <Input
+                                                        type='number'
+                                                        name='qty'
+                                                        defaultValue={item.qty}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <button
+                                                type='button'
+                                                className={
+                                                    styles.cart__main__list__item__info__delete
+                                                }
+                                                onClick={() =>
+                                                    handleDelete(item.id)
+                                                } // Call handleDelete
+                                            >
+                                                <i className='bx bx-trash' />
+                                            </button>
+                                        </div>
+                                        <h4
+                                            className={
+                                                styles.cart__main__list__item__price
+                                            }
+                                        >
+                                            {convertIDR(totalPrice)}
+                                        </h4>
                                     </div>
-                                    <h4 className={styles.cart__main__list__item__price}>
-                                        {convertIDR(totalPrice)}
-                                    </h4>
-                                </div>
-                            </Fragment>
-                        )
-                    })}
+                                </Fragment>
+                            )
+                        }
+                    )}
                 </div>
             </div>
             <div className={styles.cart__summary}>
@@ -191,7 +239,9 @@ const CartView = (props: Proptypes) => {
                 </div>
                 <Button
                     type='button'
-                    onClick={() => {}}
+                    onClick={() => {
+                        location.href = '/checkout'
+                    }}
                     variant='primary'
                     className={styles.cart__summary__checkout}
                 >

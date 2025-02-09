@@ -6,29 +6,29 @@ const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache',
-    Expires: 0,
+    Expires: 0
 }
 
 const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers,
-    timeout: 60 * 1000,
+    timeout: 60 * 1000
 })
 
 instance.interceptors.request.use(
-    async (request) => {
-        const session:any = await getSession()
+    async request => {
+        const session: any = await getSession()
         if (!session) return request
         const token = `Bearer ${session.accessToken}`
         request.headers.Authorization = token
         return request
     },
-    (error) => Promise.reject(error),
+    error => Promise.reject(error)
 )
 
 instance.interceptors.response.use(
     config => config,
-    error => Promise.reject(error),
+    error => Promise.reject(error)
 )
 
 export default instance

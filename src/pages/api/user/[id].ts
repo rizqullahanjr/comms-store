@@ -6,7 +6,7 @@ import { response } from '@/utils/responseApi'
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse,
+    res: NextApiResponse
 ) {
     if (req.method === 'PUT') {
         verify(req, res, true, async () => {
@@ -17,7 +17,7 @@ export default async function handler(
                     res,
                     result,
                     result ? 200 : 400,
-                    result ? 'success' : 'failed',
+                    result ? 'success' : 'failed'
                 )
             })
         })
@@ -30,7 +30,7 @@ export default async function handler(
                     res,
                     result,
                     result ? 200 : 400,
-                    result ? 'success' : 'failed',
+                    result ? 'success' : 'failed'
                 )
             })
         })

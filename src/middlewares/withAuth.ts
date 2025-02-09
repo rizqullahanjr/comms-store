@@ -3,7 +3,7 @@ import {
     NextFetchEvent,
     NextRequest,
     NextResponse,
-    NextMiddleware,
+    NextMiddleware
 } from 'next/server'
 
 const onlyAdmin = ['admin']
@@ -11,14 +11,14 @@ const authPage = ['auth']
 
 export default function withAuth(
     middleware: NextMiddleware,
-    requireAuth: string[] = [],
+    requireAuth: string[] = []
 ) {
     return async (req: NextRequest, next: NextFetchEvent) => {
         const pathname = req.nextUrl.pathname.split('/')[1]
         if (requireAuth.includes(pathname)) {
             const token = await getToken({
                 req,
-                secret: process.env.NEXTAUTH_SECRET,
+                secret: process.env.NEXTAUTH_SECRET
             })
             if (!token && !authPage.includes(pathname)) {
                 const url = new URL('/auth/login', req.url)

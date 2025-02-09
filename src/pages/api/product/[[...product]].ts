@@ -4,7 +4,7 @@ import {
     deleteData,
     retrieveData,
     retrieveDataById,
-    updateData,
+    updateData
 } from '@/lib/firebase/service'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { verify } from '@/utils/verifyToken'
@@ -12,7 +12,7 @@ import { response } from '@/utils/responseApi'
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse,
+    res: NextApiResponse
 ) {
     if (req.method === 'GET') {
         const { product }: any = req.query
@@ -54,9 +54,9 @@ export default async function handler(
                         res,
                         status,
                         status ? 200 : 400,
-                        status ? 'success' : 'failed',
+                        status ? 'success' : 'failed'
                     )
-                },
+                }
             )
         })
     } else if (req.method === 'DELETE') {
@@ -67,7 +67,7 @@ export default async function handler(
                     res,
                     status,
                     status ? 200 : 400,
-                    status ? 'success' : 'failed',
+                    status ? 'success' : 'failed'
                 )
             })
         })

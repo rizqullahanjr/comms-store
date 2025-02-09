@@ -4,7 +4,7 @@ import styles from './Modal.module.scss'
 
 const Modal = ({
     children,
-    onClose,
+    onClose
 }: {
     children: React.ReactNode
     onClose: any

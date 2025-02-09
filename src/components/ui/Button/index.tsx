@@ -10,7 +10,14 @@ type PropTypes = {
 }
 
 const Button = (props: PropTypes) => {
-    const { type, onClick, children, variant = 'primary', className, disabled } = props
+    const {
+        type,
+        onClick,
+        children,
+        variant = 'primary',
+        className,
+        disabled
+    } = props
     return (
         <button
             type={type}

@@ -37,7 +37,10 @@ const Navbar = () => {
             </div>
             {data ? (
                 <div className={styles.navbar__profile}>
-                    <div className={styles.navbar__profile__container} onClick={toggleDropdown}>
+                    <div
+                        className={styles.navbar__profile__container}
+                        onClick={toggleDropdown}
+                    >
                         <div className={styles.navbar__profile__image}>
                             <Image
                                 src={data.user?.image || '/default-profile.png'}
@@ -61,7 +64,8 @@ const Navbar = () => {
                             <Link href='/cart'>
                                 <i className='bx bxs-cart' /> Cart
                             </Link>
-                            {(data?.user as { role: string })?.role === 'admin' && (
+                            {(data?.user as { role: string })?.role ===
+                                'admin' && (
                                 <Link href='/admin'>
                                     <i className='bx bxs-cog' /> Admin
                                 </Link>
@@ -73,7 +77,10 @@ const Navbar = () => {
                     )}
                 </div>
             ) : (
-                <button className={styles.navbar__button} onClick={() => signIn()}>
+                <button
+                    className={styles.navbar__button}
+                    onClick={() => signIn()}
+                >
                     <i className='bx bx-log-in' /> Login
                 </button>
             )}

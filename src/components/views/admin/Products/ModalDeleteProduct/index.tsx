@@ -20,31 +20,31 @@ const ModalDeleteProduct = (props: PropTypes) => {
     const { deletedProduct, setDeletedProduct, setProductsData } = props
     const [isLoading, setIsLoading] = useState(false)
     const handleDelete = async () => {
-        const result = await productServices.deleteProduct(
-            deletedProduct.id, 
-            )
-            if (result.status === 200) {
-                setIsLoading(false)
-                deleteFile(`/images/products/${deletedProduct.id}/${deletedProduct.image.split('%2F')[3].split('?')[0]}`, async (status:boolean) => {
+        const result = await productServices.deleteProduct(deletedProduct.id)
+        if (result.status === 200) {
+            setIsLoading(false)
+            deleteFile(
+                `/images/products/${deletedProduct.id}/${deletedProduct.image.split('%2F')[3].split('?')[0]}`,
+                async (status: boolean) => {
                     if (status) {
                         setToaster({
                             variant: 'success',
-                            message: 'Product Deleted Successfully',
+                            message: 'Product Deleted Successfully'
                         })
                         console.log('file deleted')
                     }
-                })
-                setDeletedProduct({})
-                const { data } = await productServices.getAllProducts()
-                setProductsData(data.data)
-            } else {
-                setIsLoading(false)
-                setToaster({
-                    variant: 'danger',
-                    message: 'Product Failed to Deleted',
-                })
-            }
-        
+                }
+            )
+            setDeletedProduct({})
+            const { data } = await productServices.getAllProducts()
+            setProductsData(data.data)
+        } else {
+            setIsLoading(false)
+            setToaster({
+                variant: 'danger',
+                message: 'Product Failed to Deleted'
+            })
+        }
     }
     return (
         <Modal onClose={() => setDeletedProduct({})}>

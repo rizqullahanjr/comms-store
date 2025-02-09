@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { loginWithGoogle, signIn } from '@/services/auth/services'
-import { compare } from 'bcrypt'
 import GoogleProvider from 'next-auth/providers/google'
+
 import jwt from 'jsonwebtoken'
+import { compare } from 'bcrypt'
+
+import { signIn, signInWithGoogle } from '@/services/auth/services'
+import { IUsers } from '@/types/database'
 
 const authOptions: NextAuthOptions = {
-    session: {
-        strategy: 'jwt',
-    },
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
@@ -18,16 +16,19 @@ const authOptions: NextAuthOptions = {
             name: 'Credentials',
             credentials: {
                 email: { label: 'Email', type: 'email' },
-                password: { label: 'Password', type: 'password' },
+                password: { label: 'Password', type: 'password' }
             },
             async authorize(credentials) {
                 const { email, password } = credentials as {
                     email: string
                     password: string
                 }
-                const user: any = await signIn(email)
+                const user = await signIn(email)
                 if (user) {
-                    const passwordConfirm = await compare(password, user.password)
+                    const passwordConfirm = await compare(
+                        password,
+                        user.password ?? ''
+                    )
                     if (passwordConfirm) {
                         return user
                     }
@@ -35,76 +36,80 @@ const authOptions: NextAuthOptions = {
                 } else {
                     return null
                 }
-            },
+            }
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
-            clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
-        }),
+            clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || ''
+        })
     ],
+    session: {
+        strategy: 'jwt'
+    },
+    pages: {
+        signIn: '/auth/login'
+    },
     callbacks: {
-        async jwt({ token, account, profile, user }: any) {
+        async jwt({ token, account, user }) {
             if (account?.provider === 'credentials') {
+                token.id = user.id
+                token.fullname = user.name
                 token.email = user.email
-                token.fullname = user.fullname
+                token.image = user.image
                 token.phone = user.phone
                 token.role = user.role
-                token.id = user.id
-                token.image = user.image
             }
 
-            if (account?.provider === 'google') {
-                const data = {
-                    fullname: user.name,
-                    email: user.email,
-                    image: user.image,
-                    type: 'google',
-                }
-
-                await loginWithGoogle(data, (data: any) => {
-                    token.email = data.email
-                    token.fullname = data.fullname
-                    token.role = data.role
-                    token.image = data.image
-                    token.id = data.id
+            if (account?.provider == 'google') {
+                await signInWithGoogle(user, (data: IUsers) => {
+                    token.id = data?.id
+                    token.fullname = data?.fullname
+                    token.email = data?.email
+                    token.image = data?.image
+                    token.phone = data?.phone
+                    token.role = data?.role
                 })
             }
 
             return token
         },
 
-        async session({ session, token }: any) {
+        async session({ session, token }) {
+            if ('id' in token) {
+                session.user.id = token.id as string
+            }
+
+            if ('name' in token) {
+                session.user.name = token.name
+            }
+
             if ('email' in token) {
                 session.user.email = token.email
             }
-            if ('fullname' in token) {
-                session.user.fullname = token.fullname
-            }
-            if ('phone' in token) {
-                session.user.phone = token.phone
-            }
-            if ('role' in token) {
-                session.user.role = token.role
-            }
+
             if ('image' in token) {
-                session.user.image = token.image
-            }
-            if ('id' in token) {
-                session.user.id = token.id
+                session.user.image = token.image as string
             }
 
-            const accessToken = jwt.sign(token, process.env.NEXTAUTH_SECRET || '', {
-                algorithm: 'HS256',
-            })
+            if ('phone' in token) {
+                session.user.phone = token.phone as string
+            }
 
-            session.accessToken = accessToken
+            if ('role' in token) {
+                session.user.role = token.role as string
+            }
+
+            session.accessToken = jwt.sign(
+                token,
+                process.env.NEXTAUTH_SECRET || '',
+                {
+                    algorithm: 'HS256'
+                }
+            )
 
             return session
-        },
-    },
-    pages: {
-        signIn: '/auth/login',
-    },
+        }
+    }
 }
 
 export default NextAuth(authOptions)

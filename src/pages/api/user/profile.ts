@@ -5,7 +5,10 @@ import { compare, hash } from 'bcrypt'
 import { verify } from '@/utils/verifyToken'
 import { response } from '@/utils/responseApi'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
     if (req.method === 'GET') {
         verify(req, res, false, async (decoded: { id: string }) => {
             const profile: any = await retrieveDataById('users', decoded.id)
@@ -13,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 profile.id = decoded.id
                 response(res, true, 200, 'success', profile)
             } else {
-                response(res, false, 404, 'Not Found', {})
+                response(res, false, 404, 'Not Found', null)
             }
         })
     } else if (req.method === 'PUT') {
@@ -22,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (data.password) {
                 const passwordConfirm = await compare(
                     data.oldPassword,
-                    data.encryptedPassword,
+                    data.encryptedPassword
                 )
                 if (!passwordConfirm) {
                     response(res, false, 400, 'failed', {})

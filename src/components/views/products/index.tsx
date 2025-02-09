@@ -11,13 +11,27 @@ const ProductsView = (props: PropTypes) => {
     const { products } = props
     return (
         <div className={styles.product}>
-            <h1 className={styles.product__title}>All Products ({products.length})</h1>
+            <h1 className={styles.product__title}>
+                All Products ({products.length})
+            </h1>
             <div className={styles.product__main}>
                 <div className={styles.product__main__filter}>
                     <div className={styles.product__main__filter__data}>
-                        <h4 className={styles.product__main__filter__data__title}>Filter by</h4>
-                        <div className={styles.product__main__filter__data__list}>
-                            <div className={styles.product__main__filter__data__list__item}>
+                        <h4
+                            className={
+                                styles.product__main__filter__data__title
+                            }
+                        >
+                            Filter by
+                        </h4>
+                        <div
+                            className={styles.product__main__filter__data__list}
+                        >
+                            <div
+                                className={
+                                    styles.product__main__filter__data__list__item
+                                }
+                            >
                                 <input type='checkbox' id='keychain' />
                                 <label
                                     className={
@@ -28,7 +42,11 @@ const ProductsView = (props: PropTypes) => {
                                     Keychain
                                 </label>
                             </div>
-                            <div className={styles.product__main__filter__data__list__item}>
+                            <div
+                                className={
+                                    styles.product__main__filter__data__list__item
+                                }
+                            >
                                 <input type='checkbox' id='artprint' />
                                 <label
                                     className={
@@ -39,7 +57,11 @@ const ProductsView = (props: PropTypes) => {
                                     Artprint
                                 </label>
                             </div>
-                            <div className={styles.product__main__filter__data__list__item}>
+                            <div
+                                className={
+                                    styles.product__main__filter__data__list__item
+                                }
+                            >
                                 <input type='checkbox' id='service' />
                                 <label
                                     className={

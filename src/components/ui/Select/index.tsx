@@ -27,7 +27,11 @@ const Select = (props: PropTypes) => {
                 className={styles.container__select}
             >
                 {options.map((option: Option) => (
-                    <option key={option.label} value={option.value} selected={option.selected}>
+                    <option
+                        key={option.label}
+                        value={option.value}
+                        selected={option.selected}
+                    >
                         {option.label}
                     </option>
                 ))}

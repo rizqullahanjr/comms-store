@@ -5,7 +5,13 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import Select from '@/components/ui/Select'
-import { Dispatch, FormEvent, SetStateAction, useContext, useState } from 'react'
+import {
+    Dispatch,
+    FormEvent,
+    SetStateAction,
+    useContext,
+    useState
+} from 'react'
 import styles from './ModalUpdateProduct.module.scss'
 import { Product } from '@/types/product.type'
 import InputFile from '@/components/ui/InputFile'
@@ -31,7 +37,8 @@ const ModalUpdateProduct = (props: Proptypes) => {
 
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
-        newStockCount[i][type] = type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
+        newStockCount[i][type] =
+            type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
         setStockCount(newStockCount)
     }
 
@@ -47,54 +54,58 @@ const ModalUpdateProduct = (props: Proptypes) => {
                 async (status: boolean, newImageURL: string) => {
                     if (status) {
                         const data = {
-                            image: newImageURL,
+                            image: newImageURL
                         }
                         const result = await productServices.updateProduct(
                             id,
-                            data,
+                            data
                         )
                         if (result.status === 200) {
                             setIsLoading(false)
                             setUploadedImage(null)
                             form.reset()
                             setUpdatedProduct(false)
-                            const { data } = await productServices.getAllProducts()
+                            const { data } =
+                                await productServices.getAllProducts()
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
-                                message: 'Successfully Adding New Product',
+                                message: 'Successfully Adding New Product'
                             })
                         } else {
                             setIsLoading(false)
                             setToaster({
                                 variant: 'success',
-                                message: 'Failed to Add',
+                                message: 'Failed to Add'
                             })
                         }
                     } else {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured',
+                            message: 'Unknown Error Occured'
                         })
                     }
-                },
+                }
             )
         }
     }
 
-    const updateProduct = async (newImageURL: string = updatedProduct.image, form: any) => {
+    const updateProduct = async (
+        newImageURL: string = updatedProduct.image,
+        form: any
+    ) => {
         const data = {
             name: form.name.value,
             price: Number(form.price.value), // Convert price to number
             category: form.category.value,
             availability: form.availability.value,
             stock: stockCount,
-            image: newImageURL,
+            image: newImageURL
         }
         const result = await productServices.updateProduct(
             updatedProduct.id,
-            data,
+            data
         )
         if (result.status === 200) {
             setIsLoading(false)
@@ -105,13 +116,13 @@ const ModalUpdateProduct = (props: Proptypes) => {
             setProductsData(data.data)
             setToaster({
                 variant: 'success',
-                message: 'Successfully Updated the Product',
+                message: 'Successfully Updated the Product'
             })
         } else {
             setIsLoading(false)
             setToaster({
                 variant: 'success',
-                message: 'Failed to Update',
+                message: 'Failed to Update'
             })
         }
     }
@@ -136,10 +147,10 @@ const ModalUpdateProduct = (props: Proptypes) => {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured',
+                            message: 'Unknown Error Occured'
                         })
                     }
-                },
+                }
             )
         } else {
             // Call updateProduct with the default image URL
@@ -171,7 +182,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     options={[
                         { value: 'Keychain', label: 'Keychain' },
                         { value: 'Artprint', label: 'Artprint' },
-                        { value: 'Services', label: 'Services' },
+                        { value: 'Services', label: 'Services' }
                     ]}
                     defaultValue={updatedProduct.category}
                 />
@@ -181,7 +192,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     options={[
                         { value: 'Available', label: 'Available' },
                         { value: 'Sold', label: 'Out Of Stock' },
-                        { value: 'Unavailable', label: 'Unavailable' },
+                        { value: 'Unavailable', label: 'Unavailable' }
                     ]}
                     defaultValue={updatedProduct.availability}
                 />
@@ -193,7 +204,8 @@ const ModalUpdateProduct = (props: Proptypes) => {
                         src={
                             uploadedImage
                                 ? URL.createObjectURL(uploadedImage)
-                                : updatedProduct.image
+                                : (updatedProduct.image ??
+                                  '/default-product.png')
                         }
                         alt='image'
                         className={styles.form__image__preview}
@@ -207,41 +219,43 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     </div>
                 </div>
                 <label htmlFor='stock'>Stock</label>
-                {stockCount.map((item: { type: string; qty: number }, i: number) => (
-                    <div className={styles.form__stock} key={i}>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='Type'
-                                name='type'
-                                type='text'
-                                placeholder='Insert Stock Type'
-                                onChange={e => {
-                                    handleStock(e, i, 'type')
-                                }}
-                                defaultValue={item.type}
-                            />
+                {stockCount.map(
+                    (item: { type: string; qty: number }, i: number) => (
+                        <div className={styles.form__stock} key={i}>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='Type'
+                                    name='type'
+                                    type='text'
+                                    placeholder='Insert Stock Type'
+                                    onChange={e => {
+                                        handleStock(e, i, 'type')
+                                    }}
+                                    defaultValue={item.type}
+                                />
+                            </div>
+                            <div className={styles.form__stock__item}>
+                                <Input
+                                    label='QTY'
+                                    name='qty'
+                                    type='number'
+                                    placeholder='Insert Stock QTY'
+                                    onChange={e => {
+                                        handleStock(e, i, 'qty')
+                                    }}
+                                    defaultValue={item.qty}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.form__stock__item}>
-                            <Input
-                                label='QTY'
-                                name='qty'
-                                type='number'
-                                placeholder='Insert Stock QTY'
-                                onChange={e => {
-                                    handleStock(e, i, 'qty')
-                                }}
-                                defaultValue={item.qty}
-                            />
-                        </div>
-                    </div>
-                ))}
+                    )
+                )}
                 <Button
                     type='button'
                     className={styles.form__stock__button}
                     onClick={() =>
                         setStockCount([
                             ...stockCount,
-                            { type: '', qty: 0 }, // Ensure qty is a number
+                            { type: '', qty: 0 } // Ensure qty is a number
                         ])
                     }
                 >

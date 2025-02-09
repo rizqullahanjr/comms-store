@@ -8,8 +8,6 @@ import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 
-
-
 const CartPage = () => {
     const session: any = useSession()
     const [products, setProducts] = useState([])
@@ -40,11 +38,7 @@ const CartPage = () => {
             <Head>
                 <title>Cart | Comms Store</title>
             </Head>
-            <CartView
-                cart={cart}
-                products={products}
-                setCart={setCart}
-            />
+            <CartView cart={cart} products={products} setCart={setCart} />
         </>
     )
 }

@@ -12,7 +12,7 @@ type PropTypes = {
 }
 
 const AuthLayout = (props: PropTypes) => {
-    const {title, children, link, linkText } = props
+    const { title, children, link, linkText } = props
     return (
         <div className={styles.auth}>
             <h1 className={styles.auth__title}>{title}</h1>

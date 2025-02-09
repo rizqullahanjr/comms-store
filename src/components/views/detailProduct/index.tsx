@@ -28,8 +28,10 @@ const DetailProductView = (props: PropTypes) => {
         if (selectedType !== '') {
             let newCart = []
             if (
-                cart.filter((item: any) => item.id === productId && item.type === selectedType)
-                    .length > 0
+                cart.filter(
+                    (item: any) =>
+                        item.id === productId && item.type === selectedType
+                ).length > 0
             ) {
                 newCart = cart.map((item: any) => {
                     if (item.id === productId && item.type === selectedType) {
@@ -42,27 +44,29 @@ const DetailProductView = (props: PropTypes) => {
                     ...cart,
                     {
                         id: productId,
+                        name: product.name,
+                        image: product?.image ?? '/default-product.png',
                         type: selectedType,
-                        qty: 1,
-                    },
+                        qty: 1
+                    }
                 ]
             }
             try {
                 const result = await userServices.addToCart({
-                    carts: newCart,
+                    carts: newCart
                 })
                 if (result.status === 200) {
                     setSelectedType('')
                     setToaster({
                         variant: 'success',
-                        message: 'Product Added to Cart',
+                        message: 'Product Added to Cart'
                     })
                 }
             } catch (error) {
                 console.log(error)
                 setToaster({
                     variant: 'danger',
-                    message: 'Failed to Add to Cart',
+                    message: 'Failed to Add to Cart'
                 })
             }
             console.log(newCart)
@@ -75,49 +79,72 @@ const DetailProductView = (props: PropTypes) => {
                 <div className={styles.detail__main__left}>
                     <Image
                         className={styles.detail__main__left__image}
-                        src={product?.image}
+                        src={product?.image ?? '/default-product.png'}
                         width={500}
                         height={500}
                         alt={product?.name}
                     />
                 </div>
                 <div className={styles.detail__main__right}>
-                    <h1 className={styles.detail__main__right__title}>{product?.name}</h1>
-                    <p className={styles.detail__main__right__category}>{product?.category}</p>
+                    <h1 className={styles.detail__main__right__title}>
+                        {product?.name}
+                    </h1>
+                    <p className={styles.detail__main__right__category}>
+                        {product?.category}
+                    </p>
                     <p className={styles.detail__main__right__price}>
                         {convertIDR(product?.price)}
                     </p>
                     <p className={styles.detail__main__right__description}>
-                        {product?.description ? product.description : 'no description provided'}
+                        {product?.description
+                            ? product.description
+                            : 'no description provided'}
                     </p>
-                    <p className={styles.detail__main__right__subtitle}>Variant</p>
+                    <p className={styles.detail__main__right__subtitle}>
+                        Variant
+                    </p>
                     <div className={styles.detail__main__right__type}>
-                        {product?.stock?.map((item: { type: string; qty: number }) => (
-                            <div className={styles.detail__main__right__type__item} key={item.type}>
-                                <input
-                                    className={styles.detail__main__right__type__item__input}
-                                    type='radio'
-                                    id={`type-${item.type}`}
-                                    name='type'
-                                    disabled={item.qty === 0}
-                                    onClick={() => setSelectedType(item.type)}
-                                    checked={selectedType === item.type}
-                                ></input>
-                                <label
-                                    className={styles.detail__main__right__type__item__label}
-                                    htmlFor={`type-${item.type}`}
+                        {product?.stock?.map(
+                            (item: { type: string; qty: number }) => (
+                                <div
+                                    className={
+                                        styles.detail__main__right__type__item
+                                    }
+                                    key={item.type}
                                 >
-                                    {item.type}
-                                </label>
-                            </div>
-                        ))}
+                                    <input
+                                        className={
+                                            styles.detail__main__right__type__item__input
+                                        }
+                                        type='radio'
+                                        id={`type-${item.type}`}
+                                        name='type'
+                                        disabled={item.qty === 0}
+                                        onClick={() =>
+                                            setSelectedType(item.type)
+                                        }
+                                        checked={selectedType === item.type}
+                                    ></input>
+                                    <label
+                                        className={
+                                            styles.detail__main__right__type__item__label
+                                        }
+                                        htmlFor={`type-${item.type}`}
+                                    >
+                                        {item.type}
+                                    </label>
+                                </div>
+                            )
+                        )}
                     </div>
                     <Button
                         className={styles.detail__main__right__add}
                         type={status === 'authenticated' ? 'submit' : 'button'}
                         onClick={() => {
                             if (status === 'unauthenticated') {
-                                router.push(`/auth/login?callbackUrl=${router.asPath}`)
+                                router.push(
+                                    `/auth/login?callbackUrl=${router.asPath}`
+                                )
                             } else {
                                 handleAddToCart()
                             }

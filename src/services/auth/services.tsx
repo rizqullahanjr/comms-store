@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { addData, retrieveDataByField } from '@/lib/firebase/service'
+import { IUsers } from '@/types/database'
 import bcrypt from 'bcrypt'
+import { User } from 'next-auth'
 
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 export async function signUp(
@@ -15,11 +17,11 @@ export async function signUp(
         image?: string
         carts?: []
     },
-    callback: Function,
+    callback: Function
 ) {
     const data = await retrieveDataByField('users', 'email', userData.email)
 
-    if (data.length > 0) {
+    if (data) {
         callback(false)
     } else {
         if (!userData.role) {
@@ -37,13 +39,40 @@ export async function signUp(
 }
 
 export async function signIn(email: string) {
-    const data = await retrieveDataByField('users', 'email', email)
+    const user = await retrieveDataByField('users', 'email', email)
 
-    if (data) {
-        return data[0]
-    } else {
-        return null
+    if (user) {
+        return user
     }
+
+    return null
+}
+
+export async function signInWithGoogle(data: User, callback: Function) {
+    const user = await retrieveDataByField('users', 'email', data.email!)
+
+    if (user && user.type === 'google') {
+        return callback(user)
+    }
+
+    const userData: IUsers = {
+        fullname: data.name!,
+        email: data.email!,
+        image: data.image!,
+        type: 'google',
+        password: null,
+        phone: null,
+        role: 'member',
+        created_at: new Date(),
+        updated_at: new Date()
+    }
+
+    await addData('users', userData, (status: boolean, res: any) => {
+        userData.id = res.path.replace('users/', '')
+        if (status) {
+            return callback(userData)
+        }
+    })
 }
 
 export async function loginWithGoogle(
@@ -57,12 +86,12 @@ export async function loginWithGoogle(
         updated_at?: Date
         carts?: []
     },
-    callback: Function,
+    callback: Function
 ) {
     const user = await retrieveDataByField('users', 'email', data.email)
 
-    if (user.length > 0) {
-        callback(user[0])
+    if (user) {
+        callback(user)
     } else {
         data.role = 'member'
         data.created_at = new Date()

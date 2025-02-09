@@ -4,7 +4,7 @@ import { response } from '@/utils/responseApi'
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse,
+    res: NextApiResponse
 ) {
     if (req.method === 'POST') {
         await signUp(req.body, (status: boolean) => {
@@ -12,7 +12,7 @@ export default async function handler(
                 res,
                 status,
                 status ? 200 : 400,
-                status ? 'success' : 'failed',
+                status ? 'success' : 'failed'
             )
         })
     } else {

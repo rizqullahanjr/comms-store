@@ -9,25 +9,26 @@ const listSidebarItem = [
     {
         title: 'Dashboard',
         url: '/member',
-        icon: 'bxs-dashboard',
+        icon: 'bxs-dashboard'
     },
     {
         title: 'My Order',
         url: '/member/orders',
-        icon: 'bxs-cart',
+        icon: 'bxs-cart'
     },
     {
         title: 'My Profile',
         url: '/member/profile',
-        icon: 'bxs-group',
-    },
+        icon: 'bxs-group'
+    }
 ]
 
 const MemberLayout = (props: Proptypes) => {
     const { children } = props
     return (
         <div className={styles.member}>
-            <Sidebar lists={listSidebarItem} title='Member Panel' /> {/* Add title prop */}
+            <Sidebar lists={listSidebarItem} title='Member Panel' />{' '}
+            {/* Add title prop */}
             <div className={styles.member__main}>{children}</div>
         </div>
     )

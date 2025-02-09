@@ -7,7 +7,14 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Image from 'next/image'
 import { uploadFile } from '@/lib/firebase/service'
-import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useState } from 'react'
+import {
+    Dispatch,
+    FormEvent,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState
+} from 'react'
 import userServices from '@/services/user'
 import { User } from '@/types/user.type'
 import { ToasterContext } from '@/contexts/ToasterContext'
@@ -35,7 +42,7 @@ const ProfileMemberView = () => {
         const form = e.target as HTMLFormElement
         const data = {
             fullname: form.fullname.value,
-            phone: form.phone.value,
+            phone: form.phone.value
         }
 
         try {
@@ -45,19 +52,19 @@ const ProfileMemberView = () => {
                 setProfile({
                     ...profile,
                     fullname: data.fullname,
-                    phone: data.phone,
+                    phone: data.phone
                 })
                 form.reset()
                 setToaster({
                     variant: 'success',
-                    message: 'Profile Updated Successfully',
+                    message: 'Profile Updated Successfully'
                 })
             }
         } catch (error) {
             setIsLoading('')
             setToaster({
                 variant: 'danger',
-                message: 'Failed to Update Profile',
+                message: 'Failed to Update Profile'
             })
         }
     }
@@ -79,20 +86,20 @@ const ProfileMemberView = () => {
                 async (status: any, newImageURL: string) => {
                     if (status) {
                         const data = {
-                            image: newImageURL,
+                            image: newImageURL
                         }
                         const result = await userServices.updateProfile(data)
                         if (result.status === 200) {
                             setIsLoading('')
                             setProfile({
                                 ...profile,
-                                image: newImageURL,
+                                image: newImageURL
                             })
                             setChangeImage({})
                             form.reset()
                             setToaster({
                                 variant: 'success',
-                                message: 'Profile Image Updated Successfully',
+                                message: 'Profile Image Updated Successfully'
                             })
                         } else {
                             setIsLoading('')
@@ -102,10 +109,10 @@ const ProfileMemberView = () => {
                         setChangeImage({})
                         setToaster({
                             variant: 'danger',
-                            message: 'Failed to Change Profile Picture',
+                            message: 'Failed to Change Profile Picture'
                         })
                     }
-                },
+                }
             )
         }
     }
@@ -118,7 +125,7 @@ const ProfileMemberView = () => {
         const data = {
             password: form['new-password'].value,
             oldPassword: form['old-password'].value,
-            encryptedPassword: profile.password, // Use the encrypted password from the backend
+            encryptedPassword: profile.password // Use the encrypted password from the backend
         }
 
         try {
@@ -130,7 +137,7 @@ const ProfileMemberView = () => {
                 await getProfile()
                 setToaster({
                     variant: 'success',
-                    message: 'Password Updated Successfully',
+                    message: 'Password Updated Successfully'
                 })
             }
         } catch (error) {
@@ -138,7 +145,7 @@ const ProfileMemberView = () => {
             setIsLoading('')
             setToaster({
                 variant: 'danger',
-                message: 'Old Password Incorrect',
+                message: 'Old Password Incorrect'
             })
         }
     }
@@ -150,23 +157,35 @@ const ProfileMemberView = () => {
                 <div className={styles.profile__main__row}>
                     {/* Profile Image Section */}
                     <div className={styles.profile__main__row__avatar}>
-                        <h2 className={styles.profile__main__row__avatar__title}>Profile Image</h2>
+                        <h2
+                            className={styles.profile__main__row__avatar__title}
+                        >
+                            Profile Image
+                        </h2>
                         {profile.image ? (
                             <Image
-                                className={styles.profile__main__row__avatar__image}
+                                className={
+                                    styles.profile__main__row__avatar__image
+                                }
                                 src={profile.image}
                                 alt='avatar'
                                 width={200}
                                 height={200}
                             />
                         ) : (
-                            <div className={styles.profile__main__row__avatar__image}>
+                            <div
+                                className={
+                                    styles.profile__main__row__avatar__image
+                                }
+                            >
                                 {profile?.fullname?.charAt(0)}
                             </div>
                         )}
                         <form onSubmit={handleChangeProfilePicture}>
                             <label
-                                className={styles.profile__main__row__avatar__label}
+                                className={
+                                    styles.profile__main__row__avatar__label
+                                }
                                 htmlFor='upload-image'
                             >
                                 {changeImage.name ? (
@@ -174,8 +193,8 @@ const ProfileMemberView = () => {
                                 ) : (
                                     <>
                                         <p>
-                                            Upload a new Avatar, larger image will be resized
-                                            automatically
+                                            Upload a new Avatar, larger image
+                                            will be resized automatically
                                         </p>
                                         <p>
                                             Max size allowed <b>1MB</b>
@@ -184,7 +203,9 @@ const ProfileMemberView = () => {
                                 )}
                             </label>
                             <input
-                                className={styles.profile__main__row__avatar__input}
+                                className={
+                                    styles.profile__main__row__avatar__input
+                                }
                                 type='file'
                                 name='image'
                                 id='upload-image'
@@ -194,18 +215,24 @@ const ProfileMemberView = () => {
                                 }}
                             />
                             <Button
-                                className={styles.profile__main__row__avatar__button}
+                                className={
+                                    styles.profile__main__row__avatar__button
+                                }
                                 type='submit'
                                 variant='primary'
                             >
-                                {isLoading === 'picture' ? 'Updating...' : 'Upload'}
+                                {isLoading === 'picture'
+                                    ? 'Updating...'
+                                    : 'Upload'}
                             </Button>
                         </form>
                     </div>
 
                     {/* Profile Details Section */}
                     <div className={styles.profile__main__row__detail}>
-                        <h2 className={styles.profile__main__row__detail__title}>
+                        <h2
+                            className={styles.profile__main__row__detail__title}
+                        >
                             Profile Details
                         </h2>
                         <form onSubmit={handleChangeProfile}>
@@ -240,18 +267,26 @@ const ProfileMemberView = () => {
                                 disabled
                             />
                             <Button
-                                className={styles.profile__main__row__detail__button}
+                                className={
+                                    styles.profile__main__row__detail__button
+                                }
                                 type='submit'
                                 variant='primary'
                             >
-                                {isLoading === 'profile' ? 'Updating...' : 'Update Profile'}
+                                {isLoading === 'profile'
+                                    ? 'Updating...'
+                                    : 'Update Profile'}
                             </Button>
                         </form>
                     </div>
 
                     {/* Password Change Section */}
                     <div className={styles.profile__main__row__password}>
-                        <h2 className={styles.profile__main__row__password__title}>
+                        <h2
+                            className={
+                                styles.profile__main__row__password__title
+                            }
+                        >
                             Password Change
                         </h2>
                         <form onSubmit={handleChangePassword}>
@@ -271,12 +306,19 @@ const ProfileMemberView = () => {
                                 minLength={8}
                             />
                             <Button
-                                className={styles.profile__main__row__password__button}
+                                className={
+                                    styles.profile__main__row__password__button
+                                }
                                 type='submit'
                                 variant='primary'
-                                disabled={isLoading === 'password' || profile.type === 'google'}
+                                disabled={
+                                    isLoading === 'password' ||
+                                    profile.type === 'google'
+                                }
                             >
-                                {isLoading === 'password' ? 'Updating...' : 'Update Password'}
+                                {isLoading === 'password'
+                                    ? 'Updating...'
+                                    : 'Update Password'}
                             </Button>
                         </form>
                     </div>

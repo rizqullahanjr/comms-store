@@ -14,7 +14,7 @@ type Proptypes = {
 
 const lato = Lato({
     subsets: ['latin'],
-    weight: ['100', '300', '400', '700', '900'],
+    weight: ['100', '300', '400', '700', '900']
 })
 
 const disableNavbar = ['auth', 'admin', 'member']

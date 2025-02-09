@@ -20,20 +20,26 @@ const Sidebar = (props: PropTypes) => {
     return (
         <div className={styles.sidebar}>
             <div className={styles.sidebar__top}>
-                <h1 className={styles.sidebar__top__title}>{title}</h1> {/* Use title prop */}
+                <h1 className={styles.sidebar__top__title}>{title}</h1>{' '}
+                {/* Use title prop */}
                 <div className={styles.sidebar__top__lists}>
                     {lists.map((list, index) => (
                         <Link
                             href={list.url}
                             key={list.title}
                             className={`${styles.sidebar__top__lists__item} ${
-                                pathname === list.url && styles.sidebar__top__lists__item__active
+                                pathname === list.url &&
+                                styles.sidebar__top__lists__item__active
                             }`}
                         >
                             <i
                                 className={`bx ${list.icon} ${styles.sidebar__top__lists__item__icon}`}
                             />
-                            <h4 className={styles.sidebar__top__lists__item__title}>
+                            <h4
+                                className={
+                                    styles.sidebar__top__lists__item__title
+                                }
+                            >
                                 {list.title}
                             </h4>
                         </Link>

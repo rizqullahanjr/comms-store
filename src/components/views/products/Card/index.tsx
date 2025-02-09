@@ -12,7 +12,7 @@ const Card = (props: PropTypes) => {
     return (
         <div className={styles.card}>
             <Image
-                src={product.image}
+                src={product.image ?? "/default-product.png"}
                 alt={product.name}
                 width={200}
                 height={200}
@@ -20,9 +20,7 @@ const Card = (props: PropTypes) => {
             />
             <h4 className={styles.card__title}>{product.name}</h4>
             <p className={styles.card__category}>{product.category}</p>
-            <p className={styles.card__price}>
-                {convertIDR(product.price)}
-            </p>
+            <p className={styles.card__price}>{convertIDR(product.price)}</p>
         </div>
     )
 }

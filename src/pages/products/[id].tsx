@@ -23,6 +23,7 @@ const DetailProductPage = () => {
 
     const getCart = async () => {
         const { data } = await userServices.getCart()
+        console.log(data.data)
         setCart(data.data)
     }
 

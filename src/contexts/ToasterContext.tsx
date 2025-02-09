@@ -1,14 +1,14 @@
-import {createContext, useState} from 'react'
+import { createContext, useState } from 'react'
 
 const ToasterContext = createContext({
     toaster: {},
-    setToaster: ({}) => {},
+    setToaster: ({}) => {}
 })
 
-const ToasterProvider = ({children}: {children: React.ReactNode}) => {
+const ToasterProvider = ({ children }: { children: React.ReactNode }) => {
     const [toaster, setToaster] = useState({})
     return (
-        <ToasterContext.Provider value={{toaster, setToaster}}>
+        <ToasterContext.Provider value={{ toaster, setToaster }}>
             {children}
         </ToasterContext.Provider>
     )

@@ -5,7 +5,13 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import Select from '@/components/ui/Select'
-import { Dispatch, FormEvent, SetStateAction, useContext, useState } from 'react'
+import {
+    Dispatch,
+    FormEvent,
+    SetStateAction,
+    useContext,
+    useState
+} from 'react'
 import styles from './ModalAddProduct.module.scss'
 import { Product } from '@/types/product.type'
 import InputFile from '@/components/ui/InputFile'
@@ -44,11 +50,11 @@ const ModalAddProduct = (props: Proptypes) => {
                 async (status: boolean, newImageURL: string) => {
                     if (status) {
                         const data = {
-                            image: newImageURL,
+                            image: newImageURL
                         }
                         const result = await productServices.updateProduct(
                             id,
-                            data,
+                            data
                         )
                         if (result.status === 200) {
                             setIsLoading(false)
@@ -60,23 +66,23 @@ const ModalAddProduct = (props: Proptypes) => {
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
-                                message: 'Successfully Adding New Product',
+                                message: 'Successfully Adding New Product'
                             })
                         } else {
                             setIsLoading(false)
                             setToaster({
                                 variant: 'success',
-                                message: 'Failed to Add',
+                                message: 'Failed to Add'
                             })
                         }
                     } else {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured',
+                            message: 'Unknown Error Occured'
                         })
                     }
-                },
+                }
             )
         }
     }
@@ -86,7 +92,7 @@ const ModalAddProduct = (props: Proptypes) => {
         if (file.size > maxSize) {
             setToaster({
                 variant: 'danger',
-                message: 'Image size should not exceed 1MB',
+                message: 'Image size should not exceed 1MB'
             })
             return false
         }
@@ -112,9 +118,9 @@ const ModalAddProduct = (props: Proptypes) => {
             availability: form.availability.value,
             stock: stockCount.map(stock => ({
                 type: stock.type,
-                qty: Number(stock.qty), // Convert qty to number
+                qty: Number(stock.qty) // Convert qty to number
             })),
-            image: '',
+            image: ''
         }
 
         const result = await productServices.addProduct(data)
@@ -146,7 +152,7 @@ const ModalAddProduct = (props: Proptypes) => {
                     options={[
                         { value: 'Keychain', label: 'Keychain' },
                         { value: 'Artprint', label: 'Artprint' },
-                        { value: 'Services', label: 'Services' },
+                        { value: 'Services', label: 'Services' }
                     ]}
                 />
                 <Select
@@ -155,7 +161,7 @@ const ModalAddProduct = (props: Proptypes) => {
                     options={[
                         { value: 'Available', label: 'Available' },
                         { value: 'Sold', label: 'Out Of Stock' },
-                        { value: 'Unavailable', label: 'Unavailable' },
+                        { value: 'Unavailable', label: 'Unavailable' }
                     ]}
                 />
                 <label htmlFor='stock'>Stock</label>
@@ -185,7 +191,7 @@ const ModalAddProduct = (props: Proptypes) => {
                                 />
                             </div>
                         </div>
-                    ),
+                    )
                 )}
                 <Button
                     type='button'
@@ -193,7 +199,7 @@ const ModalAddProduct = (props: Proptypes) => {
                     onClick={() =>
                         setStockCount([
                             ...stockCount,
-                            { type: '', qty: 0 }, // Ensure qty is a number
+                            { type: '', qty: 0 } // Ensure qty is a number
                         ])
                     }
                 >

@@ -11,10 +11,17 @@ import {
     where,
     addDoc,
     updateDoc,
-    deleteDoc,
+    deleteDoc
 } from 'firebase/firestore'
 import app from './init'
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
+import {
+    deleteObject,
+    getDownloadURL,
+    getStorage,
+    ref,
+    uploadBytesResumable
+} from 'firebase/storage'
+import { IUsers } from '@/types/database'
 
 const firestore = getFirestore(app)
 
@@ -24,7 +31,7 @@ export async function retrieveData(collectionName: string) {
     const snapshot = await getDocs(collection(firestore, collectionName))
     const data = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data()
     }))
 
     return data
@@ -39,20 +46,27 @@ export async function retrieveDataById(collectionName: string, id: string) {
 export async function retrieveDataByField(
     collectionName: string,
     field: string,
-    value: string,
+    value: string
 ) {
-    const q = query(collection(firestore, collectionName), where(field, '==', value))
+    const q = query(
+        collection(firestore, collectionName),
+        where(field, '==', value)
+    )
 
     const snapshot = await getDocs(q)
     const data = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data()
     }))
 
-    return data
+    return data[0] as IUsers
 }
 
-export async function addData(collectionName: string, data: any, callback: Function) {
+export async function addData(
+    collectionName: string,
+    data: any,
+    callback: Function
+) {
     await addDoc(collection(firestore, collectionName), data)
         .then(res => {
             callback(true, res)
@@ -66,7 +80,7 @@ export async function updateData(
     collectionName: string,
     id: string,
     data: any,
-    callback: Function,
+    callback: Function
 ) {
     const docRef = doc(firestore, collectionName, id)
     await updateDoc(docRef, data)
@@ -78,7 +92,11 @@ export async function updateData(
         })
 }
 
-export async function deleteData(collectionName: string, id: string, callback: Function) {
+export async function deleteData(
+    collectionName: string,
+    id: string,
+    callback: Function
+) {
     const docRef = doc(firestore, collectionName, id)
     await deleteDoc(docRef)
         .then(() => {
@@ -94,11 +112,14 @@ export async function uploadFile(
     file: any,
     newName: string,
     collection: string,
-    callback: Function,
+    callback: Function
 ) {
     if (file) {
         if (file.size < 1048576) {
-            const storageRef = ref(storage, `images/${collection}/${id}/${newName}`)
+            const storageRef = ref(
+                storage,
+                `images/${collection}/${id}/${newName}`
+            )
             const uploadTask = uploadBytesResumable(storageRef, file)
             uploadTask.on(
                 'state_changed',
@@ -111,10 +132,12 @@ export async function uploadFile(
                     console.log(error)
                 },
                 () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL: any) => {
-                        callback(true, downloadURL)
-                    })
-                },
+                    getDownloadURL(uploadTask.snapshot.ref).then(
+                        (downloadURL: any) => {
+                            callback(true, downloadURL)
+                        }
+                    )
+                }
             )
         } else {
             return callback(false)

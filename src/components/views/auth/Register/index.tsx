@@ -20,7 +20,7 @@ const RegisterView = () => {
             fullname: form.fullname.value,
             phone: form.phone.value,
             email: form.email.value,
-            password: form.password.value,
+            password: form.password.value
         }
 
         try {

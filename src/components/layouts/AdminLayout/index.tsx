@@ -9,18 +9,23 @@ const listSidebarItem = [
     {
         title: 'Dashboard',
         url: '/admin',
-        icon: 'bxs-dashboard',
+        icon: 'bxs-dashboard'
     },
     {
         title: 'Products',
         url: '/admin/products',
-        icon: 'bxs-package',
+        icon: 'bxs-package'
+    },
+    {
+        title: 'Transactions',
+        url: '/admin/transactions',
+        icon: 'bxs-cart'
     },
     {
         title: 'Users',
         url: '/admin/users',
-        icon: 'bxs-group',
-    },
+        icon: 'bxs-group'
+    }
 ]
 
 const AdminLayout = (props: Proptypes) => {

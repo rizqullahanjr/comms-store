@@ -3,6 +3,9 @@ import MemberLayout from '@/components/layouts/MemberLayout'
 import styles from './Orders.module.scss'
 import Button from '@/components/ui/Button'
 import Script from 'next/script'
+import { useState } from 'react'
+import ModalDetails from './ModalDetails'
+import convertIDR from '@/utils/currency'
 
 type PropType = {
     users: any
@@ -10,6 +13,8 @@ type PropType = {
 
 const OrdersMemberView = (props: PropType) => {
     const { users } = props
+
+    const [detail, setDetail] = useState(null)
 
     const handlePayment = (token: string) => {
         window.snap.pay(token)
@@ -40,17 +45,9 @@ const OrdersMemberView = (props: PropType) => {
                         {users?.transactions?.map((data: any, i: number) => (
                             <tr key={data.order_id}>
                                 <td>{i + 1}</td>
-                                <td>
-                                    {data?.items?.map((item: any) => (
-                                        <span key={item.name}>{item.name}</span>
-                                    ))}
-                                </td>
-                                <td>
-                                    {data?.items?.map((item: any) => (
-                                        <span key={item.name}>{item.qty}</span>
-                                    ))}
-                                </td>
-                                <td>{data.total}</td>
+                                <td>{data?.items[0].name}</td>
+                                <td>{data?.items[0].qty}</td>
+                                <td>{convertIDR(data.total)}</td>
                                 <td>{data.status}</td>
                                 <td>
                                     <div
@@ -58,6 +55,15 @@ const OrdersMemberView = (props: PropType) => {
                                             styles.orders__table__actions
                                         }
                                     >
+                                        <Button
+                                            type='button'
+                                            className={
+                                                styles.orders__table__actions__detail
+                                            }
+                                            onClick={() => setDetail(data)}
+                                        >
+                                            <i className='bx bx-purchase-tag'></i>
+                                        </Button>
                                         <Button
                                             type='button'
                                             className={
@@ -80,6 +86,9 @@ const OrdersMemberView = (props: PropType) => {
                     </tbody>
                 </table>
             </div>
+            {detail && (
+                <ModalDetails data={detail} onClose={() => setDetail(null)} />
+            )}
         </MemberLayout>
     )
 }

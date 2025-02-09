@@ -3,6 +3,10 @@
 
 import AdminLayout from '@/components/layouts/AdminLayout'
 import styles from './Transactions.module.scss'
+import convertIDR from '@/utils/currency'
+import Button from '@/components/ui/Button'
+import { useState } from 'react'
+import ModalDetails from './ModalDetails'
 
 type PropTypes = {
     transactions: any[]
@@ -11,12 +15,14 @@ type PropTypes = {
 const TransactionsAdminView = (props: PropTypes) => {
     const { transactions } = props
 
+    const [detail, setDetail] = useState(null)
+
     return (
         <>
             <AdminLayout>
-                <div className={styles.users}>
+                <div className={styles.orders}>
                     <h1>Transactions Lists</h1>
-                    <table className={styles.users__table}>
+                    <table className={styles.orders__table}>
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -24,6 +30,7 @@ const TransactionsAdminView = (props: PropTypes) => {
                                 <th>Order Id</th>
                                 <th>Total</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,14 +40,39 @@ const TransactionsAdminView = (props: PropTypes) => {
                                         <td>{index + 1}</td>
                                         <td>{transaction.user.fullname}</td>
                                         <td>{transaction.order_id}</td>
-                                        <td>{transaction.total}</td>
+                                        <td>{convertIDR(transaction.total)}</td>
                                         <td>{transaction.status}</td>
+                                        <td>
+                                            <div
+                                                className={
+                                                    styles.orders__table__actions
+                                                }
+                                            >
+                                                <Button
+                                                    type='button'
+                                                    className={
+                                                        styles.orders__table__actions__detail
+                                                    }
+                                                    onClick={() =>
+                                                        setDetail(transaction)
+                                                    }
+                                                >
+                                                    <i className='bx bx-purchase-tag'></i>
+                                                </Button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 )
                             )}
                         </tbody>
                     </table>
                 </div>
+                {detail && (
+                    <ModalDetails
+                        data={detail}
+                        onClose={() => setDetail(null)}
+                    />
+                )}
             </AdminLayout>
         </>
     )

@@ -26,7 +26,6 @@ type Proptypes = {
 
 const CheckoutView = (props: Proptypes) => {
     const { profile, products, setProfile } = props
-
     const [modalAddress, setModalAddress] = useState(false)
     const [selectedAddress, setSelectedAddress] = useState(0)
 

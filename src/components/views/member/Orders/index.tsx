@@ -13,9 +13,7 @@ type PropType = {
 
 const OrdersMemberView = (props: PropType) => {
     const { users } = props
-
     const [detail, setDetail] = useState(null)
-
     const handlePayment = (token: string) => {
         window.snap.pay(token)
     }

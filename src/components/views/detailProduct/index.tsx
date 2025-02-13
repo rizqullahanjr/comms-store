@@ -23,7 +23,6 @@ const DetailProductView = (props: PropTypes) => {
     const { status }: any = useSession()
     const router = useRouter()
     const [selectedType, setSelectedType] = useState('')
-    console.log(product)
     const handleAddToCart = async () => {
         if (selectedType !== '') {
             let newCart = []

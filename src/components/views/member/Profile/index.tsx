@@ -24,8 +24,7 @@ const ProfileMemberView = () => {
     const [profile, setProfile] = useState<User | any>({})
     const [changeImage, setChangeImage] = useState<File | any>({})
     const [isLoading, setIsLoading] = useState('')
-
-    // Fetch profile data
+    
     const getProfile = async () => {
         const { data } = await userServices.getProfile()
         setProfile(data.data)

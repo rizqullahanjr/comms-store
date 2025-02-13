@@ -15,25 +15,41 @@ import { ToasterContext } from '@/contexts/ToasterContext'
 type Proptypes = {
     cart: any
     products: Product[]
-    setCart: (cart: any) => void // Add setCart prop to update cart state
+    setCart: (cart: any) => void
 }
 
 const CartView = (props: Proptypes) => {
     const { setToaster } = useContext(ToasterContext)
-
     const { cart, products, setCart } = props
-
-    // Get product by ID
     const getProduct = (id: string) => {
         const product = products.find(product => product.id === id)
         return product
     }
 
-    // Get options for the Select component
+    const calculateSummary = () => {
+        const totalPrice = cart.reduce(
+            (acc: number, item: { id: string; qty: number }) => {
+                const product = getProduct(item.id)
+                return acc + (product ? product.price * item.qty : 0)
+            },
+            0
+        )
+
+        const tax = totalPrice * 0.1 // 10% tax
+        const shippingCost = 0 // Placeholder for shipping cost
+
+        return {
+            totalPrice,
+            tax,
+            shippingCost,
+            grandTotal: totalPrice + tax + shippingCost
+        }
+    }
+    
     const getOptionType = (id: string, selected: string) => {
         const product = products.find(product => product.id === id)
-        if (!product || !product.stock) return [] // Return an empty array if product or stock is missing
-
+        if (!product || !product.stock) return []
+        
         const options = product.stock
             .map((stock: { type: string; qty: number }) => {
                 if (stock.qty > 0) {
@@ -78,26 +94,6 @@ const CartView = (props: Proptypes) => {
         }
     }
 
-    // Calculate total price, tax, and shipping cost
-    const calculateSummary = () => {
-        const totalPrice = cart.reduce(
-            (acc: number, item: { id: string; qty: number }) => {
-                const product = getProduct(item.id)
-                return acc + (product ? product.price * item.qty : 0)
-            },
-            0
-        )
-
-        const tax = totalPrice * 0.1 // 10% tax
-        const shippingCost = 0 // Placeholder for shipping cost
-
-        return {
-            totalPrice,
-            tax,
-            shippingCost,
-            grandTotal: totalPrice + tax + shippingCost
-        }
-    }
 
     const { totalPrice, tax, shippingCost, grandTotal } = calculateSummary()
 

@@ -23,6 +23,7 @@ const DetailProductView = (props: PropTypes) => {
     const { status }: any = useSession()
     const router = useRouter()
     const [selectedType, setSelectedType] = useState('')
+
     const handleAddToCart = async () => {
         if (selectedType !== '') {
             let newCart = []
@@ -44,7 +45,7 @@ const DetailProductView = (props: PropTypes) => {
                     {
                         id: productId,
                         name: product.name,
-                        image: product?.image ?? '/default-product.png',
+                        image: product?.image || '/default-product.png',
                         type: selectedType,
                         qty: 1,
                         price: product.price
@@ -52,9 +53,7 @@ const DetailProductView = (props: PropTypes) => {
                 ]
             }
             try {
-                const result = await userServices.addToCart({
-                    carts: newCart
-                })
+                const result = await userServices.addToCart({ carts: newCart })
                 if (result.status === 200) {
                     setSelectedType('')
                     setToaster({
@@ -71,13 +70,14 @@ const DetailProductView = (props: PropTypes) => {
             }
         }
     }
+
     return (
         <div className={styles.detail}>
             <div className={styles.detail__main}>
                 <div className={styles.detail__main__left}>
                     <Image
                         className={styles.detail__main__left__image}
-                        src={product?.image ?? '/default-product.png'}
+                        src={product?.image || '/default-product.png'}
                         width={500}
                         height={500}
                         alt={product?.name}
@@ -94,9 +94,7 @@ const DetailProductView = (props: PropTypes) => {
                         {convertIDR(product?.price)}
                     </p>
                     <p className={styles.detail__main__right__description}>
-                        {product?.description
-                            ? product.description
-                            : 'no description provided'}
+                        {product?.description || 'No description provided'}
                     </p>
                     <p className={styles.detail__main__right__subtitle}>
                         Variant
@@ -122,7 +120,7 @@ const DetailProductView = (props: PropTypes) => {
                                             setSelectedType(item.type)
                                         }
                                         checked={selectedType === item.type}
-                                    ></input>
+                                    />
                                     <label
                                         className={
                                             styles.detail__main__right__type__item__label

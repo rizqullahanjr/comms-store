@@ -1,17 +1,18 @@
 export type Stock = {
-    type: string // Type of stock (e.g., "Sedang", "Besar")
-    qty: number // Quantity available
+    type: string
+    qty: number
 }
 
 export type Product = {
-    id: string // Product ID
-    stock: Stock[] // Array of stock information
-    category: string // Product category (e.g., "Keychain")
-    availability: string // Product availability
-    status: boolean // Product availability status
-    image: string // URL of the product image
-    updated_at: Date // Last updated timestamp
-    created_at: Date // Creation timestamp
-    price: number // Product price
-    name: string // Product name
+    id: string
+    stock: Stock[]
+    category: string
+    availability: string
+    status: boolean
+    image: string
+    updated_at: Date
+    created_at: Date
+    price: number
+    name: string
+    description?: string
 }

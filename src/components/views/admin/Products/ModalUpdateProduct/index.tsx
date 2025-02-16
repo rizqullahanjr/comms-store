@@ -16,7 +16,6 @@ import styles from './ModalUpdateProduct.module.scss'
 import { Product } from '@/types/product.type'
 import InputFile from '@/components/ui/InputFile'
 import productServices from '@/services/product'
-import { useSession } from 'next-auth/react'
 import { uploadFile } from '@/lib/firebase/service'
 import Image from 'next/image'
 import { ToasterContext } from '@/contexts/ToasterContext'
@@ -33,12 +32,11 @@ const ModalUpdateProduct = (props: Proptypes) => {
     const [isLoading, setIsLoading] = useState(false)
     const [stockCount, setStockCount] = useState(updatedProduct.stock)
     const [uploadedImage, setUploadedImage] = useState<File | null>(null)
-    const session: any = useSession()
 
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
         newStockCount[i][type] =
-            type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
+            type === 'qty' ? Number(e.target.value) : e.target.value
         setStockCount(newStockCount)
     }
 
@@ -70,20 +68,20 @@ const ModalUpdateProduct = (props: Proptypes) => {
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
-                                message: 'Successfully Adding New Product'
+                                message: 'Successfully Updated Product'
                             })
                         } else {
                             setIsLoading(false)
                             setToaster({
-                                variant: 'success',
-                                message: 'Failed to Add'
+                                variant: 'danger',
+                                message: 'Failed to Update Product'
                             })
                         }
                     } else {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured'
+                            message: 'Unknown Error Occurred'
                         })
                     }
                 }
@@ -97,10 +95,11 @@ const ModalUpdateProduct = (props: Proptypes) => {
     ) => {
         const data = {
             name: form.name.value,
-            price: Number(form.price.value), // Convert price to number
+            price: Number(form.price.value),
             category: form.category.value,
             availability: form.availability.value,
             stock: stockCount,
+            description: form.description.value, // Add description
             image: newImageURL
         }
         const result = await productServices.updateProduct(
@@ -116,13 +115,13 @@ const ModalUpdateProduct = (props: Proptypes) => {
             setProductsData(data.data)
             setToaster({
                 variant: 'success',
-                message: 'Successfully Updated the Product'
+                message: 'Successfully Updated Product'
             })
         } else {
             setIsLoading(false)
             setToaster({
-                variant: 'success',
-                message: 'Failed to Update'
+                variant: 'danger',
+                message: 'Failed to Update Product'
             })
         }
     }
@@ -134,11 +133,10 @@ const ModalUpdateProduct = (props: Proptypes) => {
         const file = form.image.files[0]
 
         if (file) {
-            const newName = 'main.' + file.name.split('.')[1]
             uploadFile(
                 updatedProduct.id,
                 file,
-                newName,
+                'main.' + file.name.split('.')[1],
                 'products',
                 async (status: boolean, newImageURL: string) => {
                     if (status) {
@@ -147,13 +145,12 @@ const ModalUpdateProduct = (props: Proptypes) => {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured'
+                            message: 'Unknown Error Occurred'
                         })
                     }
                 }
             )
         } else {
-            // Call updateProduct with the default image URL
             updateProduct(updatedProduct.image, form)
         }
     }
@@ -175,6 +172,13 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     type='number'
                     placeholder='Product Price'
                     defaultValue={updatedProduct.price}
+                />
+                <Input
+                    label='Description'
+                    name='description'
+                    type='text'
+                    placeholder='Insert Product Description'
+                    defaultValue={updatedProduct.description}
                 />
                 <Select
                     label='Category'
@@ -204,19 +208,16 @@ const ModalUpdateProduct = (props: Proptypes) => {
                         src={
                             uploadedImage
                                 ? URL.createObjectURL(uploadedImage)
-                                : (updatedProduct.image ??
-                                  '/default-product.png')
+                                : updatedProduct.image || '/default-product.png'
                         }
                         alt='image'
                         className={styles.form__image__preview}
                     />
-                    <div>
-                        <InputFile
-                            name='image'
-                            uploadedImage={uploadedImage}
-                            setUploadedImage={setUploadedImage}
-                        />
-                    </div>
+                    <InputFile
+                        name='image'
+                        uploadedImage={uploadedImage}
+                        setUploadedImage={setUploadedImage}
+                    />
                 </div>
                 <label htmlFor='stock'>Stock</label>
                 {stockCount.map(
@@ -228,9 +229,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
                                     name='type'
                                     type='text'
                                     placeholder='Insert Stock Type'
-                                    onChange={e => {
-                                        handleStock(e, i, 'type')
-                                    }}
+                                    onChange={e => handleStock(e, i, 'type')}
                                     defaultValue={item.type}
                                 />
                             </div>
@@ -240,9 +239,7 @@ const ModalUpdateProduct = (props: Proptypes) => {
                                     name='qty'
                                     type='number'
                                     placeholder='Insert Stock QTY'
-                                    onChange={e => {
-                                        handleStock(e, i, 'qty')
-                                    }}
+                                    onChange={e => handleStock(e, i, 'qty')}
                                     defaultValue={item.qty}
                                 />
                             </div>
@@ -253,16 +250,13 @@ const ModalUpdateProduct = (props: Proptypes) => {
                     type='button'
                     className={styles.form__stock__button}
                     onClick={() =>
-                        setStockCount([
-                            ...stockCount,
-                            { type: '', qty: 0 } // Ensure qty is a number
-                        ])
+                        setStockCount([...stockCount, { type: '', qty: 0 }])
                     }
                 >
                     Add New Stock
                 </Button>
                 <Button type='submit' disabled={isLoading}>
-                    {isLoading ? 'Updating Products...' : 'Update Products'}
+                    {isLoading ? 'Updating Product...' : 'Update Product'}
                 </Button>
             </form>
         </Modal>

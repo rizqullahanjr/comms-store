@@ -34,7 +34,7 @@ const ModalAddProduct = (props: Proptypes) => {
     const handleStock = (e: any, i: number, type: string) => {
         const newStockCount: any = [...stockCount]
         newStockCount[i][type] =
-            type === 'qty' ? Number(e.target.value) : e.target.value // Convert qty to number
+            type === 'qty' ? Number(e.target.value) : e.target.value
         setStockCount(newStockCount)
     }
 
@@ -66,20 +66,20 @@ const ModalAddProduct = (props: Proptypes) => {
                             setProductsData(data.data)
                             setToaster({
                                 variant: 'success',
-                                message: 'Successfully Adding New Product'
+                                message: 'Successfully Added New Product'
                             })
                         } else {
                             setIsLoading(false)
                             setToaster({
-                                variant: 'success',
-                                message: 'Failed to Add'
+                                variant: 'danger',
+                                message: 'Failed to Add Product'
                             })
                         }
                     } else {
                         setIsLoading(false)
                         setToaster({
                             variant: 'danger',
-                            message: 'Unknown Error Occured'
+                            message: 'Unknown Error Occurred'
                         })
                     }
                 }
@@ -110,16 +110,16 @@ const ModalAddProduct = (props: Proptypes) => {
             return
         }
 
-        // Convert price and qty to numbers
         const data = {
             name: form.name.value,
-            price: Number(form.price.value), // Convert price to number
+            price: Number(form.price.value),
             category: form.category.value,
             availability: form.availability.value,
             stock: stockCount.map(stock => ({
                 type: stock.type,
-                qty: Number(stock.qty) // Convert qty to number
+                qty: Number(stock.qty)
             })),
+            description: form.description.value, // Add description
             image: null
         }
 
@@ -145,6 +145,12 @@ const ModalAddProduct = (props: Proptypes) => {
                     name='price'
                     type='number'
                     placeholder='Product Price'
+                />
+                <Input
+                    label='Description'
+                    name='description'
+                    type='text'
+                    placeholder='Insert Product Description'
                 />
                 <Select
                     label='Category'
@@ -174,9 +180,7 @@ const ModalAddProduct = (props: Proptypes) => {
                                     name='type'
                                     type='text'
                                     placeholder='Insert Stock Type'
-                                    onChange={e => {
-                                        handleStock(e, i, 'type')
-                                    }}
+                                    onChange={e => handleStock(e, i, 'type')}
                                 />
                             </div>
                             <div className={styles.form__stock__item}>
@@ -185,9 +189,7 @@ const ModalAddProduct = (props: Proptypes) => {
                                     name='qty'
                                     type='number'
                                     placeholder='Insert Stock QTY'
-                                    onChange={e => {
-                                        handleStock(e, i, 'qty')
-                                    }}
+                                    onChange={e => handleStock(e, i, 'qty')}
                                 />
                             </div>
                         </div>
@@ -197,10 +199,7 @@ const ModalAddProduct = (props: Proptypes) => {
                     type='button'
                     className={styles.form__stock_button}
                     onClick={() =>
-                        setStockCount([
-                            ...stockCount,
-                            { type: '', qty: 0 } // Ensure qty is a number
-                        ])
+                        setStockCount([...stockCount, { type: '', qty: 0 }])
                     }
                 >
                     Add New Stock
@@ -212,7 +211,7 @@ const ModalAddProduct = (props: Proptypes) => {
                     setUploadedImage={setUploadedImage}
                 />
                 <Button type='submit' disabled={isLoading}>
-                    {isLoading ? 'Adding Products...' : 'Add Products'}
+                    {isLoading ? 'Adding Product...' : 'Add Product'}
                 </Button>
             </form>
         </Modal>

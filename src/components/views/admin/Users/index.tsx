@@ -18,6 +18,7 @@ const UsersAdminView = (props: PropTypes) => {
     const [usersData, setUsersData] = useState<User[]>([])
     const [deletedUser, setDeletedUser] = useState<User | {}>({})
     const { users } = props
+    console.log(users)
 
     useEffect(() => {
         setUsersData(users)

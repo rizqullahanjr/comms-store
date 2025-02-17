@@ -32,6 +32,7 @@ const ProductsAdminView = (props: PropTypes) => {
     const [updatedProduct, setUpdatedProduct] = useState<Product | {}>({})
     const [deletedProduct, setDeletedProduct] = useState<Product | {}>({})
     const session: any = useSession()
+    console.log(products)
     useEffect(() => {
         setProductsData(products)
     }, [products])

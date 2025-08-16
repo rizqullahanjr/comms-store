@@ -1,5 +1,7 @@
 This Project were meant for my college final assignment, but i hope users find it useful for opening new online shop tenant
 
+live demo -> https://comms-store.vercel.app/
+
 ## Disclaimer
 
 This project still need some improvement, code contribution is much appreciated
